@@ -1,0 +1,32 @@
+::-webkit-scrollbar {
+  display: none;
+}
+tr:nth-child(even) {
+  background-color: rgba(211,211,211,0.3);
+}
+tr:nth-child(odd) {
+  background-color: white;
+}
+.theme--light.v-data-table > .v-data-table__wrapper > table > tbody > tr:hover:not(.v-data-table__expanded__content):not(.v-data-table__empty-wrapper) {
+  background: lightgray !important;
+}
+
+.my-table {
+}
+.my-table tr:nth-child(even) {
+  background-color: white;
+}
+.my-table tr:nth-child(odd) {
+  background-color: white;
+}
+
+.v-btn.primary {
+  border-radius: 8px !important;
+  font-family: "Google Sans Medium";
+  text-transform: capitalize !important;
+}
+.v-btn--disabled {
+  border-radius: 8px !important;
+  font-family: "Google Sans Medium";
+  text-transform: capitalize !important;
+}

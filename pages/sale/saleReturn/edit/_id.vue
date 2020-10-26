@@ -1,10 +1,22 @@
 <template>
-  <h1>Edit Sale Return</h1>
+  <SaleReturnForm
+    title="Update Sale Return"
+    :sale-return="saleReturn"
+    is-update
+  />
 </template>
 
 <script>
+import SaleReturnForm from '@/components/sale/sale-return/form'
 export default {
-  name: 'Id'
+  name: 'Id',
+  components: { SaleReturnForm },
+  async asyncData({ $axios, route }) {
+    console.log(await $axios.$get('saleReturn/' + route.params.id))
+    return {
+      saleReturn: await $axios.$get('saleReturn/' + route.params.id)
+    }
+  }
 }
 </script>
 

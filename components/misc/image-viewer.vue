@@ -9,11 +9,13 @@
     >
       <img
         v-if="image"
+        alt="imageViewer"
         style="object-fit: cover"
         :src="$axios.defaults.baseURL + 'uploads/' + image.name"
       />
       <img
         v-else
+        alt="elseImageViewer"
         style="object-fit: cover"
         src="../../assets/images/placeholders/placeholder_person.jpg"
       />
@@ -24,11 +26,13 @@
       >
         <img
           v-if="image"
+          alt="viewImage"
           style="object-fit: cover;width: 700px"
           :src="$axios.defaults.baseURL + 'uploads/' + image.name"
         />
         <img
           v-else
+          alt="viewElseImage"
           style="object-fit: cover;width: 700px;height: 480px"
           src="../../assets/images/placeholders/placeholder_person.jpg"
         />
@@ -52,7 +56,6 @@ export default {
   methods: {
     viewImage() {
       this.imageView = true
-      console.log(this.imageView)
     }
   }
 }

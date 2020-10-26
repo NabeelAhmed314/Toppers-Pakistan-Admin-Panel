@@ -1,109 +1,12 @@
 <template>
   <div>
     <v-tabs v-model="tab" background-color="#313F53" color="#ff974d" dark>
-      <v-tab>Products</v-tab>
       <v-tab>Categories</v-tab>
       <v-tab>Sub Categories</v-tab>
       <v-tab>Units</v-tab>
     </v-tabs>
 
     <v-tabs-items v-model="tab">
-      <v-tab-item>
-        <div class="product-main">
-          <div>
-            <entity-list
-              :data-columns="productHeader"
-              :data="products"
-              product
-              create-route="product/add"
-              update-route="product/edit/$id"
-              delete-route="/product/delete/$id"
-              @update="updateProducts"
-              @productChange="updateProduct"
-              @filterProduct="filterProducts"
-            />
-          </div>
-          <div>
-            <entity-detail
-              v-if="product"
-              product
-              :item="product"
-              detail-title="Transactions"
-              :data-columns="productTransactionHeader"
-              :data="productTransactions"
-              @openAdjust="openAdjust"
-              @getProduct="updateProduct"
-            />
-          </div>
-        </div>
-        <v-dialog v-model="adjustBool" width="50%">
-          <v-card v-if="adjust" style="padding: 25px;">
-            <div style="display: flex;justify-content: center">
-              <v-card-title>Adjustment Detail</v-card-title>
-            </div>
-            <v-text-field
-              v-model="adjust.name"
-              class="textfieldStyle"
-              outlined
-              type="number"
-              readonly
-              dense
-              hide-details
-              label="Party Name"
-            />
-            <v-select
-              class="textfieldStyle"
-              :items="adjustItems"
-              :value="getType(adjust.action_type)"
-              label="Adjustment Type"
-              readonly
-              dense
-              hide-details
-              outlined
-            ></v-select>
-            <v-text-field
-              v-model="adjust.quantity"
-              class="textfieldStyle"
-              outlined
-              type="number"
-              readonly
-              dense
-              hide-details
-              label="Quantity"
-            />
-            <v-text-field
-              v-model="adjust.date"
-              class="textfieldStyle"
-              type="date"
-              readonly
-              outlined
-              dense
-              hide-details
-              label="Adjustment Date"
-            />
-            <v-text-field
-              v-model="adjust.value"
-              class="textfieldStyle"
-              outlined
-              readonly
-              type="number"
-              dense
-              hide-details
-              label="At Price"
-            />
-            <v-text-field
-              v-model="adjust.status"
-              class="textfieldStyle"
-              outlined
-              type="number"
-              readonly
-              dense
-              hide-details
-              label="Status"
-            />
-          </v-card>
-        </v-dialog>
-      </v-tab-item>
       <v-tab-item>
         <div class="product-main">
           <div>
@@ -144,6 +47,7 @@
             />
             <div>
               <img
+                alt="subCategory"
                 width="100%"
                 :src="
                   $axios.defaults.baseURL.replace('api/', '') +
@@ -260,16 +164,6 @@
             :value="productDetail.stock_value"
           />
         </div>
-        <div>
-          <img
-            width="100%"
-            :src="
-              $axios.defaults.baseURL.replace('api/', '') +
-                'images/products/' +
-                productDetail.image
-            "
-          />
-        </div>
       </v-card>
     </v-dialog>
   </div>
@@ -295,12 +189,12 @@ export default {
     productTransactions: [],
     productTransactionHeader: [
       { text: 'Type', value: 'action_type' },
-      { text: 'Name', value: 'customer' },
+      { text: 'Name', value: 'name' },
       { text: 'Date', value: 'date' },
       { text: 'Quantity', value: 'quantity' },
       { text: 'Price/Unit', value: 'value' },
       { text: 'Status', value: 'status' },
-      { text: '', value: 'actions', width: '10px', sortable: false }
+      { text: '', value: 'product-actions', width: '10px', sortable: false }
     ],
     // tab 2
     categories: [],
@@ -363,7 +257,6 @@ export default {
     updateProduct(item) {
       this.product = item
       this.getProductTransactions()
-      this.getProducts()
     },
     updateCategory(item) {
       this.category = item
@@ -414,8 +307,10 @@ export default {
       }
     },
     openAdjust(item) {
-      this.adjustBool = true
-      this.adjust = item
+      if (item.action_type < 3) {
+        this.adjustBool = true
+        this.adjust = item
+      }
     },
     openSub(item) {
       this.subCategoryBool = true

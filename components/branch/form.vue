@@ -85,13 +85,13 @@
 
 <script>
 import SimpleForm from '../../common/ui/widgets/SimpleForm'
-import { Branch } from '../../models/branch'
 import ImageSelector from '../misc/image-selector'
+import { Branch } from '@/models/branch'
 import {
   emailValidator,
   required,
   phoneValidator
-} from '../../common/lib/validator'
+} from '@/common/lib/validator'
 export default {
   name: 'BranchForm',
   components: {
@@ -143,7 +143,6 @@ export default {
       if (this.sendImage) {
         formData.append('image', this.sendImage)
       } else if (!this.sendImage && !this.isUpdate) {
-        console.log(this.sendImage)
         this.error = 'Please Provide Image'
         return null
       }

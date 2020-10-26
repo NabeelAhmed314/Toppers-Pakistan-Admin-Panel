@@ -3,6 +3,7 @@
     <div style="display: flex;overflow: auto" class="scrollbar">
       <div v-for="(item, i) of image" :key="i" style="margin-left: 10px;">
         <img
+          alt="wideView"
           width="100%"
           height="100%"
           style=" display: block;
@@ -22,6 +23,7 @@
         <div v-if="name && title">
           <h3 style="text-align: center">{{ title.toUpperCase() }}</h3>
           <img
+            alt="wideView"
             style="object-fit: cover;width: 700px"
             :src="$axios.defaults.baseURL + 'uploads/' + name"
           />

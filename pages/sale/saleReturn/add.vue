@@ -1,10 +1,12 @@
 <template>
-  <h1>Add Sale Return</h1>
+  <sale-return-form />
 </template>
 
 <script>
+import SaleReturnForm from '@/components/sale/sale-return/form'
 export default {
-  name: 'Add'
+  name: 'Add',
+  components: { SaleReturnForm }
 }
 </script>
 

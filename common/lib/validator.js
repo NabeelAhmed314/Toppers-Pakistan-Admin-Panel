@@ -18,6 +18,8 @@ export const required = (value) => !!value || 'Please provide some value'
  */
 export const price = (value) =>
   +value > 0 || 'You have entered an invalid price'
+export const quantity = (value) =>
+  +value > 0 || 'You have entered an invalid quantity'
 
 /**
  * @param {string} value

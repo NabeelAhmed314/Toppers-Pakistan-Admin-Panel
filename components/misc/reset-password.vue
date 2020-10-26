@@ -6,11 +6,7 @@
       <v-container
         style="display: flex;justify-content: center;align-items: center;"
       >
-        <img
-          src="../../assets/Haweyati_Logo.png"
-          width="130px"
-          height="130px"
-        />
+        <img alt="logo" src="../../assets/images/ToppersPakistanLogo.png" />
       </v-container>
       <v-container style="display: flex;justify-content: center;padding: 0">
         <v-card-title>Reset Password</v-card-title>
@@ -44,9 +40,9 @@
           outlined
           style="color: #313F53"
           :rules="[required, lengthValidator]"
-          @keypress.enter="reset"
           label="Confirm Password"
           dense
+          @keypress.enter="reset"
         ></v-text-field>
         <nuxt-link to="/auth/login" style="text-decoration: none">
           <p style="font-size: 12px;text-align: right;color:#313f53;">
@@ -69,7 +65,7 @@
 </template>
 
 <script>
-import { required, lengthValidator } from '../../common/lib/validator'
+import { required, lengthValidator } from '@/common/lib/validator'
 
 export default {
   name: 'ResetPassword',

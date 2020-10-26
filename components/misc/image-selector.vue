@@ -17,6 +17,7 @@
         />
         <img
           v-if="!imageData && image.image"
+          alt="selectorImage"
           width="100%"
           height="100%"
           style="object-fit: contain"
@@ -25,7 +26,7 @@
               'images/' +
               route +
               '/' +
-              this.image.image
+              image.image
           "
           @input="onSelectFile"
         />

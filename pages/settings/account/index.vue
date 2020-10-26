@@ -28,8 +28,8 @@
             <ImageSelector
               v-model="imageFile"
               :image="$auth.user"
-              @input="sendImage = $event"
               route="user"
+              @input="sendImage = $event"
             />
           </v-container>
           <v-text-field
@@ -54,6 +54,7 @@
           ></v-text-field>
           <v-select
             v-model="user.type"
+            readonly
             style="color: #313F53"
             color="#313F53"
             :items="typeItems"
@@ -64,6 +65,7 @@
           />
           <v-autocomplete
             v-if="user.type === 'Sub Admin'"
+            readonly
             :rules="[required]"
             :items="branches"
             :value="user.branchId"
@@ -103,7 +105,7 @@ import {
   emailValidator,
   lengthValidator,
   phoneValidator
-} from '../../../common/lib/validator'
+} from '@/common/lib/validator'
 import ImageSelector from '@/components/misc/image-selector'
 export default {
   components: { ImageSelector },

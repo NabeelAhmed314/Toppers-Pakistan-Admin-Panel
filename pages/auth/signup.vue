@@ -128,6 +128,8 @@ export default {
     errors: [],
     isLoading: false,
     search: null,
+    type: 'password',
+    icon: 'mdi-eye',
     signup: {
       name: '',
       email: '',
@@ -146,6 +148,15 @@ export default {
     lengthValidator,
     phoneValidator,
     emailValidator,
+    togglePassword() {
+      if (this.type === 'password') {
+        this.type = 'text'
+        this.icon = 'mdi-eye'
+      } else {
+        this.type = 'password'
+        this.icon = 'mdi-eye-off'
+      }
+    },
     returnBack() {
       this.$router.back()
     },

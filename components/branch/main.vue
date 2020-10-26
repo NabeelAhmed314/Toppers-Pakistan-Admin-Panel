@@ -14,6 +14,7 @@
       </div>
       <div>
         <BranchDetail
+          v-if="branch"
           :branch="branch"
           detail-title="Managers"
           :data="branchManagers"
@@ -51,14 +52,8 @@ export default {
   }),
   async mounted() {
     await this.getBranches()
-    await this.getBranch()
-    await this.getBranchManagers()
   },
   methods: {
-    getBranch() {
-      this.branch = this.branches[0]
-      console.log(this.branch)
-    },
     async getBranchManagers() {
       this.branchManagers = await this.$axios.$get(
         'branch/managers/' + this.branch.id
@@ -70,6 +65,12 @@ export default {
     },
     async getBranches() {
       this.branches = await this.$axios.$get('/branch')
+      if (this.branches.length > 0) {
+        this.branch = this.branches[0]
+        await this.getBranchManagers()
+      } else {
+        this.branch = null
+      }
     }
   }
 }

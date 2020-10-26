@@ -1,10 +1,12 @@
 <template>
-  <h1>Add Sale Order</h1>
+  <FormSaleOrder />
 </template>
 
 <script>
+import FormSaleOrder from '@/components/sale/sale-order/form-sale-order'
 export default {
-  name: 'AddSaleOrder'
+  name: 'AddSaleOrder',
+  components: { FormSaleOrder }
 }
 </script>
 

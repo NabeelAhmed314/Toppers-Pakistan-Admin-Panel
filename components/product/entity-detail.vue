@@ -24,7 +24,7 @@
       </div>
     </div>
     <v-data-table
-      :height="product ? '46vh' : '72vh'"
+      :height="product ? '48vh' : '75vh'"
       :headers="dataColumns"
       :items="data"
       :search="search"
@@ -52,6 +52,25 @@
           </div>
         </v-toolbar>
       </template>
+      <template v-slot:item.product-actions="{ item }">
+        <v-icon
+          v-if="item.action_type < 3"
+          color="green"
+          small
+          class="mr-2"
+          @click.stop.prevent="update(item)"
+        >
+          mdi-pencil
+        </v-icon>
+        <v-icon
+          v-if="item.action_type < 3"
+          color="red"
+          small
+          @click.stop.prevent="removeItem(item)"
+        >
+          mdi-delete
+        </v-icon>
+      </template>
       <template v-slot:item.actions="{ item }">
         <v-icon
           color="green"
@@ -74,7 +93,12 @@
         <p style="margin: 0">Rs. {{ item.value }}</p>
       </template>
     </v-data-table>
-    <v-dialog v-model="adjust" width="50%">
+    <v-dialog
+      v-model="adjust"
+      persistent
+      width="50%"
+      @click:outside="noSubmitClose"
+    >
       <SimpleForm
         title="Adjust Product Stock"
         method="post"
@@ -96,7 +120,7 @@
           <v-select
             v-model="sendData.adjustType"
             :rules="[required]"
-            :items="adjustType"
+            :items="updateAdjust ? updateAdjustType : adjustType"
             :value="sendData.adjustType"
             label="Adjustment Type"
             :readonly="readonly"
@@ -137,8 +161,8 @@
 </template>
 
 <script>
-import { required } from '../../common/lib/validator'
 import SimpleForm from '../../common/ui/widgets/SimpleForm'
+import { required } from '@/common/lib/validator'
 export default {
   name: 'EntityDetail',
   components: { SimpleForm },
@@ -178,7 +202,9 @@ export default {
       readonly: false,
       search: '',
       adjust: false,
-      adjustType: ['Add Stock', 'Reduce Stock', 'Opening Stock'],
+      updateAdjust: false,
+      updateAdjustType: ['Add Stock', 'Reduce Stock', 'Opening Stock'],
+      adjustType: ['Add Stock', 'Reduce Stock'],
       sendData: {
         adjustType: null,
         quantity: null,
@@ -201,7 +227,6 @@ export default {
       formData.append('atPrice', this.sendData.atPrice)
       formData.append('actionType', this.sendData.adjustType)
       formData.append('date', this.sendData.date)
-      formData.forEach((item) => console.log(item))
       return formData
     },
     closeDialog(item) {
@@ -212,15 +237,26 @@ export default {
       this.sendData.quantity = null
       this.endpoint = 'productHistory/store'
       this.readonly = false
+      this.updateAdjust = false
       this.$emit('getProduct', item.data)
     },
+    noSubmitClose() {
+      this.adjust = !this.adjust
+      this.sendData.adjustType = null
+      this.sendData.date = null
+      this.sendData.atPrice = null
+      this.sendData.quantity = null
+      this.endpoint = 'productHistory/store'
+      this.readonly = false
+      this.updateAdjust = false
+    },
     update(item) {
-      console.log(item)
       this.sendData.quantity = item.quantity
       this.sendData.adjustType = this.getType(item.action_type)
       this.sendData.date = item.date
       this.sendData.atPrice = item.value
       this.readonly = true
+      this.updateAdjust = true
       this.endpoint = '/productHistory/update/' + item.id
       this.adjust = true
     },
@@ -232,11 +268,14 @@ export default {
           return 'Reduce Stock'
         case 2:
           return 'Opening Stock'
+        case 3:
+          return 'Sale'
+        case 5:
+          return 'Sale Return'
       }
     },
     async removeItem(item) {
       window.console.log(item)
-      console.log(this.deleteRoute)
       if (confirm('Are you sure?')) {
         const response = await this.$axios.$delete(
           this.deleteRoute.replace('$id', item.id)

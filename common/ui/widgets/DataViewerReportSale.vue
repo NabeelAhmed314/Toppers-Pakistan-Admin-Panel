@@ -7,7 +7,7 @@
       <span>{{ title }}</span>
       <v-spacer />
       <v-btn
-        v-if="this.data !== null && this.data.length !== 0"
+        v-if="data !== null && data.length !== 0"
         color="#FF974D"
         elevation="0"
         style="padding: 0 13px 0 7px !important; border-radius: 4px; margin-right: 10px"
@@ -197,7 +197,6 @@ export default {
         date: '08-23-2020',
         dateTo: '08-27-2020'
       })
-      console.log(this.data)
     },
     async getDailyOrdersReport(dateSend) {
       if (dateSend) {
@@ -280,7 +279,6 @@ export default {
         const week = this.weekSend
           ? moment(this.weekSend).week()
           : moment().week()
-        console.log(week)
         win = window.open(
           'http://192.168.100.100:4000/reports/orders-report?type=weekly&date=' +
             week,
@@ -297,7 +295,6 @@ export default {
         )
       } else if (this.year) {
         const year = this.yearSend ? this.yearSend : moment().year()
-        console.log(this.yearSend)
         win = window.open(
           'http://192.168.100.100:4000/reports/orders-report?type=yearly&date=' +
             year,

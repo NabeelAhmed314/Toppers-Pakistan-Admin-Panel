@@ -1,5 +1,5 @@
 <template>
-  <div style="height: fit-content; margin: 0px 0">
+  <div style="height: fit-content; margin: 0 0">
     <v-form ref="myForm" v-model="valid" class="form">
       <slot name="header">
         <header class="form__header">
@@ -190,7 +190,6 @@ export default defineComponent({
             this.valid = false
             return
         }
-
         if (res) context.emit('response', res)
 
         if (props.return) {

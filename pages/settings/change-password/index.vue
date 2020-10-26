@@ -77,7 +77,7 @@ import {
   emailValidator,
   lengthValidator,
   phoneValidator
-} from '../../../common/lib/validator'
+} from '@/common/lib/validator'
 export default {
   data: () => ({
     loading: false,

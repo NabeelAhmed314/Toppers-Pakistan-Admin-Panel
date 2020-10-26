@@ -59,7 +59,8 @@ export default {
       { text: 'Type', value: 'action_type' },
       { text: 'Date', value: 'date' },
       { text: 'Quantity', value: 'quantity' },
-      { text: 'Price/Unit', value: 'value' },
+      { text: 'Total', value: 'value' },
+      { text: 'Balance', value: 'balance' },
       { text: 'Status', value: 'status' },
       { text: '', value: 'actions', width: '10px', sortable: false }
     ]

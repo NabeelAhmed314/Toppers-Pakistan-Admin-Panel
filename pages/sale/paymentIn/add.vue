@@ -1,10 +1,12 @@
 <template>
-  <h1>Add Payment In</h1>
+  <Form />
 </template>
 
 <script>
+import Form from '@/components/sale/payment-in/form'
 export default {
-  name: 'AddPaymentIn'
+  name: 'AddPaymentIn',
+  components: { Form }
 }
 </script>
 

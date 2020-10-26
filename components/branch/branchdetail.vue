@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { required } from '../../common/lib/validator'
+import { required } from '@/common/lib/validator'
 export default {
   name: 'BranchDetail',
   props: {
@@ -109,7 +109,6 @@ export default {
       formData.append('atPrice', this.sendData.atPrice)
       formData.append('actionType', this.sendData.adjustType)
       formData.append('date', this.sendData.date)
-      formData.forEach((item) => console.log(item))
       return formData
     },
     closeDialog(item) {
@@ -123,7 +122,6 @@ export default {
       this.$emit('getProduct', item.data)
     },
     update(item) {
-      console.log(item)
       this.sendData.quantity = item.quantity
       this.sendData.adjustType = this.getType(item.action_type)
       this.sendData.date = item.date
@@ -144,7 +142,6 @@ export default {
     },
     async removeItem(item) {
       window.console.log(item)
-      console.log(this.deleteRoute)
       if (confirm('Are you sure?')) {
         const response = await this.$axios.$delete(
           this.deleteRoute.replace('$id', item.id)

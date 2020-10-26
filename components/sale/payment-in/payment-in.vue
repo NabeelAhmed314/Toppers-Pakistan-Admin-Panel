@@ -2,36 +2,45 @@
   <div style="padding: 20px">
     <div>
       <v-data-table
-        height="58vh"
-        :headers="dataColumns"
+        height="63vh"
         :items="data"
-        :search="search"
+        :headers="dataColumns"
         class="elevation-1"
         disable-pagination
         hide-default-footer
         dense
-        @click:row="openDetail"
       >
         <template v-slot:top>
-          <div
-            style="display: grid;grid-template-columns: 1fr 1fr;width: 60%;grid-column-gap: 15px;padding: 10px 20px"
-          >
-            <v-text-field
-              hide-details
-              dense
-              type="date"
-              outlined
-              label="From"
-            />
-            <v-text-field hide-details dense type="date" outlined label="To" />
-          </div>
+          <v-form ref="form">
+            <div
+              style="display: grid;grid-template-columns: 1fr 1fr;width: 60%;grid-column-gap: 15px;padding: 10px 20px"
+            >
+              <v-text-field
+                v-model="from"
+                dense
+                :rules="[required]"
+                type="date"
+                outlined
+                label="From"
+                @change="filterData"
+              />
+              <v-text-field
+                v-model="to"
+                :rules="[required]"
+                dense
+                type="date"
+                outlined
+                label="To"
+                @change="filterData"
+              />
+            </div>
+          </v-form>
           <v-toolbar dense flat>
             <p style="margin: 0">Transactions</p>
           </v-toolbar>
           <v-toolbar flat color="white">
             <div style="width: 250px">
               <v-text-field
-                v-model="search"
                 placeholder="Search"
                 prepend-inner-icon="mdi-magnify"
                 outlined
@@ -58,7 +67,7 @@
             color="green"
             small
             class="mr-2"
-            @click.stop.prevent="update(item)"
+            @click="handleUpdateEvent(item)"
           >
             mdi-pencil
           </v-icon>
@@ -71,36 +80,37 @@
             {{ getType(item.action_type) }}
           </p>
         </template>
-        <template v-slot:item.value="{ item }">
-          <p style="margin: 0">Rs. {{ item.value }}</p>
+        <template v-slot:item.received="{ item }">
+          <p style="margin: 0">Rs. {{ item.received }}</p>
         </template>
       </v-data-table>
     </div>
+    <v-dialog v-model="showError">
+      <v-card>
+        <v-card-title> Error: {{ error }} </v-card-title>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import { required } from '@/common/lib/validator'
 export default {
   name: 'PaymentIn',
   data: () => {
     return {
-      paid: 1000,
-      unpaid: 0,
-      type: 'All',
-      items: [
-        'All',
-        'This Month',
-        'Last Month',
-        'This Quarter',
-        'This Year',
-        'Custom'
-      ],
+      to: null,
+      from: null,
+      data: [],
+      error: null,
+      showError: false,
       dataColumns: [
-        { text: 'Date', value: 'date' },
-        { text: 'Ref No.', value: 'date' },
-        { text: 'Name', value: 'date' },
-        { text: 'Total', value: 'date' },
-        { text: 'Received', value: 'date' },
+        { text: 'Date', value: 'receipt_date' },
+        { text: 'Ref No.', value: 'receipt_id' },
+        { text: 'Name', value: 'customer.name' },
+        { text: 'Branch', value: 'branch.name' },
+        { text: 'Received', value: 'received' },
+        { text: 'Description', value: 'description' },
         { text: '', value: 'actions' }
       ]
     }
@@ -110,7 +120,35 @@ export default {
       return this.unpaid + this.paid
     }
   },
+  mounted() {
+    this.getPaymentIn()
+  },
   methods: {
+    required,
+    async filterData() {
+      if (this.$refs.form.validate()) {
+        const data = {}
+        data.to = this.to
+        data.from = this.from
+        if (this.$auth.user.type === 'Sub Admin') {
+          this.data = await this.$axios.$post(
+            '/paymentIn/filter/' + this.$auth.user.branch_id,
+            data
+          )
+        } else {
+          this.data = await this.$axios.$post('/paymentIn/filter/-1', data)
+        }
+      }
+    },
+    async getPaymentIn() {
+      if (this.$auth.user.type === 'Sub Admin') {
+        this.data = await this.$axios.$get(
+          '/paymentIn/branch/' + this.$auth.user.branch_id
+        )
+      } else {
+        this.data = await this.$axios.$get('/paymentIn/branch/-1')
+      }
+    },
     handleCreateEvent() {
       this.$router.push('/sale/paymentIn/add')
     },
@@ -119,16 +157,15 @@ export default {
     },
     async removeItem(item) {
       window.console.log(item)
-      console.log(this.deleteRoute)
       if (confirm('Are you sure?')) {
         const response = await this.$axios.$delete(
-          this.deleteRoute.replace('$id', item.id)
+          '/paymentIn/delete/' + item.id
         )
         if (response.error) {
           this.showError = true
           this.error = response.error
         } else {
-          this.$emit('update')
+          await this.getPaymentIn()
         }
       }
     }

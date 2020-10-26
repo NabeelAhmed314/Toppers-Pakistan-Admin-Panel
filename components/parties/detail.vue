@@ -4,13 +4,28 @@
       <div style="display: flex;margin:15px 0">
         <p style="margin: 0">{{ party.name }}</p>
       </div>
-      <div>
-        <p>
-          Phone:&nbsp; <span class="entity-value">{{ party.phone }}</span>
-        </p>
-        <p>
-          Email:&nbsp; <span class="entity-value">{{ party.email }}</span>
-        </p>
+      <div style="display: flex">
+        <div>
+          <p>
+            Phone:&nbsp; <span class="entity-value">{{ party.phone }}</span>
+          </p>
+          <p>
+            Email:&nbsp; <span class="entity-value">{{ party.email }}</span>
+          </p>
+        </div>
+        <v-spacer />
+        <div>
+          <p>
+            Balance:&nbsp;
+            <span v-if="party.balance" class="entity-value">
+              <span v-if="party.balance < 0" class="negative"
+                >Rs. {{ toPositive(party.balance) }}</span
+              >
+              <span v-else class="positive">Rs. {{ party.balance }}</span>
+            </span>
+            <span v-else class="entity-value">{{ 'Rs. 0.0' }}</span>
+          </p>
+        </div>
       </div>
     </div>
     <v-data-table
@@ -42,12 +57,17 @@
           </div>
         </v-toolbar>
       </template>
+      <template v-slot:item.action_type="{ item }">
+        <p style="margin: 0">
+          {{ getType(item.action_type) }}
+        </p>
+      </template>
     </v-data-table>
   </div>
 </template>
 
 <script>
-import { required } from '../../common/lib/validator'
+import { required } from '@/common/lib/validator'
 export default {
   name: 'Detail',
   props: {
@@ -98,7 +118,6 @@ export default {
       formData.append('atPrice', this.sendData.atPrice)
       formData.append('actionType', this.sendData.adjustType)
       formData.append('date', this.sendData.date)
-      formData.forEach((item) => console.log(item))
       return formData
     },
     closeDialog(item) {
@@ -112,7 +131,6 @@ export default {
       this.$emit('getProduct', item.data)
     },
     update(item) {
-      console.log(item)
       this.sendData.quantity = item.quantity
       this.sendData.adjustType = this.getType(item.action_type)
       this.sendData.date = item.date
@@ -129,11 +147,22 @@ export default {
           return 'Reduce Stock'
         case 2:
           return 'Opening Stock'
+        case 3:
+          return 'Sale'
+        case 4:
+          return 'Payment In'
+        case 5:
+          return 'Sale Return'
+        case 6:
+          return 'Purchase Order'
+        case 7:
+          return 'Payment Out'
+        case 8:
+          return 'Purchase Return'
       }
     },
     async removeItem(item) {
       window.console.log(item)
-      console.log(this.deleteRoute)
       if (confirm('Are you sure?')) {
         const response = await this.$axios.$delete(
           this.deleteRoute.replace('$id', item.id)
@@ -145,6 +174,9 @@ export default {
           this.$emit('update')
         }
       }
+    },
+    toPositive(value) {
+      return Math.abs(parseInt(value))
     }
   }
 }
@@ -169,6 +201,12 @@ export default {
 }
 .entity-value {
   color: #bc282b;
+}
+.negative {
+  color: red;
+}
+.positive {
+  color: green;
 }
 .form {
   width: 100%;

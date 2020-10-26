@@ -68,6 +68,7 @@
           style="margin: 5px;padding: 0px"
         >
           <img
+            alt="person"
             style="object-fit: cover"
             :src="$axios.defaults.baseURL + 'uploads/' + item.person.image.name"
           />
@@ -82,6 +83,7 @@
           style="margin: 5px;padding: 0px"
         >
           <img
+            alt="profile"
             style="object-fit: cover"
             :src="
               $axios.defaults.baseURL + 'uploads/' + item.profile.image.name
@@ -98,6 +100,7 @@
           style="margin: 5px;padding: 0px"
         >
           <img
+            alt="driver"
             style="object-fit: cover"
             :src="
               $axios.defaults.baseURL +
@@ -113,8 +116,25 @@
       <template v-slot:item.image="{ item }">
         <v-avatar v-if="item.image != null" style="margin: 5px;padding: 0px">
           <img
+            alt="image"
             style="object-fit: cover"
             :src="$axios.defaults.baseURL + 'uploads/' + item.image.name"
+          />
+        </v-avatar>
+        <p v-if="item.image == null" style="margin: 0">
+          No Image
+        </p>
+      </template>
+      <template v-slot:item.imageCarousel="{ item }">
+        <v-avatar v-if="item.image != null" style="margin: 5px;padding: 0px">
+          <img
+            alt="carousal"
+            style="object-fit: cover"
+            :src="
+              $axios.defaults.baseURL.replace('api/', '') +
+                'images/carousel/' +
+                item.image
+            "
           />
         </v-avatar>
         <p v-if="item.image == null" style="margin: 0">
@@ -127,6 +147,7 @@
           style="margin: 5px;padding: 0px"
         >
           <img
+            alt="multiimage"
             style="object-fit: cover"
             :src="$axios.defaults.baseURL + 'uploads/' + item.images[0].name"
           />
@@ -147,6 +168,7 @@
           style="margin: 5px;padding: 0px"
         >
           <img
+            alt="supplier"
             style="object-fit: cover"
             :src="
               $axios.defaults.baseURL +
@@ -462,7 +484,7 @@ export default defineComponent({
       window.console.log(item)
       if (confirm('Are you sure?')) {
         await context.root.$axios.$delete(
-          props.removeRoute.replace('$id', item._id)
+          props.removeRoute.replace('$id', item.id)
         )
         loader.data.value.splice(loader.data.value.indexOf(item), 1)
         if (this.onDelete() != null) {
@@ -474,7 +496,7 @@ export default defineComponent({
       window.console.log(item)
       if (confirm('Are you sure?')) {
         await context.root.$axios.$patch(
-          props.approveRoute.replace('$id', item._id)
+          props.approveRoute.replace('$id', item.id)
         )
         loader.data.value.splice(loader.data.value.indexOf(item), 1)
         if (this.onAccepted() != null) {
@@ -489,7 +511,7 @@ export default defineComponent({
       )
       if (result != null && result !== '') {
         await context.root.$axios.$patch(
-          props.rejectRoute.replace('$id', item._id),
+          props.rejectRoute.replace('$id', item.id),
           {
             message: result
           }
@@ -500,7 +522,7 @@ export default defineComponent({
         }
       } else if (result === '') {
         await context.root.$axios.$patch(
-          props.rejectRoute.replace('$id', item._id)
+          props.rejectRoute.replace('$id', item.id)
         )
         loader.data.value.splice(loader.data.value.indexOf(item), 1)
         if (this.onRejected() != null) {
@@ -512,7 +534,7 @@ export default defineComponent({
       window.console.log(item)
       if (confirm('Are you sure?')) {
         await context.root.$axios.$patch(
-          props.blockRoute.replace('$id', item._id)
+          props.blockRoute.replace('$id', item.id)
         )
         loader.data.value.splice(loader.data.value.indexOf(item), 1)
         if (this.onBlock != null) {
@@ -524,7 +546,7 @@ export default defineComponent({
       window.console.log(item)
       if (confirm('Are you sure?')) {
         await context.root.$axios.$patch(
-          props.unblockRoute.replace('$id', item._id)
+          props.unblockRoute.replace('$id', item.id)
         )
         loader.data.value.splice(loader.data.value.indexOf(item), 1)
         if (this.onUnblock != null) {
@@ -538,13 +560,13 @@ export default defineComponent({
     }
     function changeItem(item) {
       context.root.$options.router.push(
-        props.changeRoute.replace('$id', item._id)
+        props.changeRoute.replace('$id', item.id)
       )
     }
     function detailItem(item) {
       if (this.detail) {
         context.root.$options.router.push(
-          props.detailRoute.replace('$id', item._id)
+          props.detailRoute.replace('$id', item.id)
         )
       }
     }

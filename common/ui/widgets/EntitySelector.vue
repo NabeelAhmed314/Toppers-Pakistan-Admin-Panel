@@ -197,7 +197,6 @@ export default defineComponent({
     function addItem(item) {
       if (props.multiple) {
         let found = false
-        console.log(selectorState._selection)
         for (const _item of selectorState._selection) {
           if (_item._id === item._id) {
             found = true

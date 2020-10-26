@@ -1,7 +1,7 @@
 import colors from 'vuetify/es5/util/colors'
 
 export default {
-  mode: 'universal',
+  ssr: false,
   /*
    ** Headers of the page
    */
@@ -35,7 +35,11 @@ export default {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ['~/plugins/composition-api.js', '~/plugins/mask.js'],
+  plugins: [
+    '~/plugins/composition-api.js',
+    '~/plugins/mask.js',
+    '~/plugins/moment.js'
+  ],
   /*
    ** Nuxt.js dev-modules
    */
@@ -57,7 +61,7 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    baseURL: 'http://192.168.1.36:8000/api/'
+    baseURL: 'http://192.168.100.23:8000/api/'
   },
   auth: {
     strategies: {

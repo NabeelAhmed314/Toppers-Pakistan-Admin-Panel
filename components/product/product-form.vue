@@ -5,6 +5,7 @@
       method="post"
       :data="formData"
       return
+      :show-error="false"
       :endpoint="isUpdate ? '/product/update/' + product.id : '/product/store'"
     >
       <template v-slot:header>
@@ -59,7 +60,7 @@
           <v-autocomplete
             class="my-text"
             :value="product.branch_id"
-            :rules="[required]"
+            :rules="[required, quantity]"
             :items="branches"
             :loading="isLoading"
             :search-input.sync="searchBranch"
@@ -79,7 +80,7 @@
           <div style="display: flex">
             <v-text-field
               v-model="product.sale_price"
-              :rules="[required]"
+              :rules="[required, price]"
               class="my-text my-text-small"
               outlined
               type="number"
@@ -89,7 +90,7 @@
             ></v-text-field>
             <v-text-field
               v-model="product.purchase_price"
-              :rules="[required]"
+              :rules="[required, price]"
               class="my-text my-text-small"
               outlined
               type="number"
@@ -132,6 +133,9 @@
             ></v-autocomplete>
           </div>
           <p class="my-text">Media</p>
+          <p v-if="error" class="my-text" style="color:red">
+            {{ error }}
+          </p>
           <div class="my-text">
             <ImageSelector
               v-model="imageFile"
@@ -153,7 +157,9 @@ import { Product } from '@/models/product'
 import {
   emailValidator,
   required,
-  phoneValidator
+  phoneValidator,
+  quantity,
+  price
 } from '@/common/lib/validator'
 export default {
   name: 'ProductForm',
@@ -184,7 +190,8 @@ export default {
     searchUnit: null,
     branches: [],
     subCategories: [],
-    units: []
+    units: [],
+    error: null
   }),
   mounted() {
     this.getSubCategories()
@@ -192,6 +199,8 @@ export default {
     this.getBranches()
   },
   methods: {
+    quantity,
+    price,
     emailValidator,
     required,
     phoneValidator,
@@ -209,7 +218,6 @@ export default {
     },
     formData() {
       const formData = new FormData()
-      const image = false
       for (const key of Object.keys(this.product)) {
         if (key === 'id') {
         } else if (key === 'image') {
@@ -221,10 +229,11 @@ export default {
           formData.append(key, this.product[key])
         }
       }
-      if (!image) {
-        if (this.sendImage) {
-          formData.append('image', this.sendImage)
-        }
+      if (this.sendImage) {
+        formData.append('image', this.sendImage)
+      } else if (!this.sendImage && !this.isUpdate) {
+        this.error = 'Please Provide Image'
+        return null
       }
       formData.forEach((item) => window.console.log(item))
       return formData

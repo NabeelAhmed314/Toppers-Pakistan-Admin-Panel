@@ -47,10 +47,12 @@
           color="#313F53"
           outlined
           :rules="[required]"
-          type="password"
+          :type="type"
           style="color: #313F53"
           label="Password"
           dense
+          :append-icon="icon"
+          @click:append="togglePassword"
           @keypress.enter="userLogin"
         ></v-text-field>
         <nuxt-link to="/auth/forgot-password" style="text-decoration: none">
@@ -86,6 +88,8 @@ export default {
       email: '',
       password: ''
     },
+    type: 'password',
+    icon: 'mdi-eye-off',
     message: 'Your Password was changed!',
     messageCheck: false
   }),
@@ -95,6 +99,15 @@ export default {
   methods: {
     required,
     emailValidator,
+    togglePassword() {
+      if (this.type === 'password') {
+        this.type = 'text'
+        this.icon = 'mdi-eye'
+      } else {
+        this.type = 'password'
+        this.icon = 'mdi-eye-off'
+      }
+    },
     async gotoReset() {
       await this.$router.push('/auth/reset-password')
     },

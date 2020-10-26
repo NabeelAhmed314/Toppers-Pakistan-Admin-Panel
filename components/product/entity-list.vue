@@ -1,7 +1,7 @@
 <template>
   <div class="entity-list-main">
     <v-data-table
-      :height="product ? '60vh' : '70vh'"
+      :height="product ? '65vh' : '75vh'"
       :headers="dataColumns"
       :items="data"
       :search="searchText"
@@ -47,9 +47,9 @@
         </v-toolbar>
         <v-toolbar v-if="product" flat>
           <v-select
+            v-model="branchId"
             outlined
             dense
-            v-model="branchId"
             :items="branches"
             item-text="name"
             item-value="id"
@@ -164,7 +164,6 @@ export default {
       }
     },
     filterProduct(item) {
-      console.log(item)
       this.$emit('filterProduct', item)
     }
   }

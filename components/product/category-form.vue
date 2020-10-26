@@ -4,6 +4,7 @@
       style="margin: 30px 0"
       method="post"
       :data="formData"
+      :show-error="false"
       return
       :endpoint="
         isUpdate ? '/category/update/' + category.id : '/category/store'
@@ -39,6 +40,9 @@
             dense
           ></v-text-field>
           <p>Media</p>
+          <p v-if="error" style="color:red">
+            {{ error }}
+          </p>
           <div style="margin-bottom: 20px">
             <ImageSelector
               v-model="imageFile"
@@ -55,13 +59,13 @@
 
 <script>
 import SimpleForm from '../../common/ui/widgets/SimpleForm'
-import { Category } from '../../models/category'
 import ImageSelector from '../misc/image-selector'
+import { Category } from '@/models/category'
 import {
   emailValidator,
   required,
   phoneValidator
-} from '../../common/lib/validator'
+} from '@/common/lib/validator'
 export default {
   name: 'CategoryForm',
   components: {
@@ -84,7 +88,8 @@ export default {
   },
   data: () => ({
     imageFile: null,
-    sendImage: null
+    sendImage: null,
+    error: null
   }),
   methods: {
     emailValidator,
@@ -95,7 +100,6 @@ export default {
     },
     formData() {
       const formData = new FormData()
-      const image = false
       for (const key of Object.keys(this.category)) {
         if (key === 'id') {
           continue
@@ -105,10 +109,11 @@ export default {
           formData.append(key, this.category[key])
         }
       }
-      if (!image) {
-        if (this.sendImage) {
-          formData.append('image', this.sendImage)
-        }
+      if (this.sendImage) {
+        formData.append('image', this.sendImage)
+      } else if (!this.sendImage && !this.isUpdate) {
+        this.error = 'Please Provide Image'
+        return null
       }
       // formData.forEach((item) => window.console.log(item))
       return formData

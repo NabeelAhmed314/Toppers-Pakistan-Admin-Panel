@@ -15,9 +15,11 @@
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.12.2",
     "@vue/composition-api": "^1.0.0-beta.11",
+    "moment": "^2.29.0",
     "nuxt": "^2.0.0",
     "v-mask": "^2.2.3",
-    "vue-the-mask": "^0.11.1"
+    "vue-the-mask": "^0.11.1",
+    "vue-upload-multiple-image": "^1.1.6"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.0.0",

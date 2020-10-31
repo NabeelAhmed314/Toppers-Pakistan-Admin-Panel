@@ -132,6 +132,7 @@
                 :value="item.product"
                 outlined
                 dense
+                :readonly="item.id"
                 :rules="[required]"
                 hide-details
                 flat
@@ -154,6 +155,7 @@
               <v-autocomplete
                 v-if="item.variants && item.variants.length > 0"
                 v-model="item.variant"
+                :readonly="item.id"
                 outlined
                 dense
                 :rules="[required]"

@@ -21,6 +21,7 @@ export const price = (value) =>
 export const quantity = (value) =>
   +value > 0 || 'You have entered an invalid quantity'
 
+export const stock = (value, stock) => value <= stock || 'Out Of Stock'
 /**
  * @param {string} value
  * @returns {boolean|string}

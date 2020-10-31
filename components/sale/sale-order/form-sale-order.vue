@@ -10,6 +10,8 @@
               outlined
               dense
               flat
+              :search-input.sync="searchCustomer"
+              :value-comparator="(a, b) => a && b && a.id === b.id"
               :rules="[type ? required : true]"
               :label="type ? 'Customer *' : 'Customer (Optional)'"
               :items="customers"
@@ -25,6 +27,17 @@
               :item-value="(item) => item"
               @change="(item) => selectCustomer(item)"
             >
+              <template v-slot:no-data>
+                <span>
+                  <p
+                    style="margin: 0 5px 0 0;text-align: right;cursor: pointer"
+                    @click="saveCustomer"
+                  >
+                    <v-icon>mdi-plus-circle</v-icon>
+                    Add Party
+                  </p>
+                </span>
+              </template>
             </v-autocomplete>
           </div>
           <div class="sale-order-customer-address">
@@ -184,6 +197,19 @@
             ></v-text-field>
           </div>
           <div
+            style="display: grid; grid-template-columns: 1fr 1fr;margin-bottom: 5px"
+          >
+            <label>Discount</label>
+            <v-text-field
+              v-model="discount"
+              outlined
+              dense
+              hide-details
+              placeholder="0.0"
+              @change="checkBalance"
+            ></v-text-field>
+          </div>
+          <div
             v-if="type"
             style="display: grid; grid-template-columns: 1fr 1fr;margin-bottom: 5px"
           >
@@ -248,6 +274,7 @@ export default {
           variants: []
         }
       ],
+      searchCustomer: '',
       branches: [],
       branch: null,
       products: [],
@@ -261,6 +288,7 @@ export default {
       type: false,
       total: null,
       received: null,
+      discount: null,
       balance: null,
       columns: [
         { text: '#', value: 'count', width: '50px', sortable: false },
@@ -310,14 +338,26 @@ export default {
       this.products = await this.$axios.$get('item/filter/' + i)
     },
     selectCustomer(i) {
+      console.log(i)
       this.customer = i
       this.billingName = i.name
+    },
+    async saveCustomer() {
+      if (this.searchCustomer) {
+        console.log(this.searchCustomer)
+        const obj = {
+          name: this.searchCustomer
+        }
+        const response = await this.$axios.$post('customer/store', obj)
+        await this.getCustomers()
+        this.selectCustomer(response)
+      }
     },
     async productChanged(i, index) {
       const setIndex = this.selectedProducts.indexOf(index)
       this.selectedProducts[setIndex].variant = null
       this.selectedProducts[setIndex].variants = await this.$axios.$get(
-        'variant/item/' + i.id
+        'order/variant/item/' + i.id
       )
       if (this.selectedProducts[setIndex].variants.length > 0) {
         this.selectedProducts[setIndex].variant = this.selectedProducts[
@@ -372,7 +412,16 @@ export default {
       this.total = total
     },
     checkBalance() {
-      this.balance = this.total - this.received
+      if (this.discount && this.received) {
+        this.balance =
+          this.total - (parseInt(this.received) + parseInt(this.discount))
+      }
+      if (!this.discount && this.received) {
+        this.balance = this.total - this.received
+      }
+      if (this.discount && !this.received) {
+        this.balance = this.total - this.discount
+      }
     },
     async formData() {
       if (this.$refs.form.validate()) {
@@ -385,6 +434,7 @@ export default {
         data.branchId = this.branch
         data.type = this.type ? 'Credit' : 'Cash'
         data.amount = this.total
+        if (this.discount) data.discount = this.discount
         if (this.type) data.balance = this.balance
         data.items = []
         for (const item of this.selectedProducts) {

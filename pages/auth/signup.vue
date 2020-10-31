@@ -120,6 +120,7 @@ import {
   phoneValidator
 } from '@/common/lib/validator'
 export default {
+  middleware: 'isAdmin',
   data: () => ({
     loading: false,
     success: false,

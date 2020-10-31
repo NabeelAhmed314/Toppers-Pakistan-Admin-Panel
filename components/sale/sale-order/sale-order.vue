@@ -224,6 +224,7 @@ export default {
         { text: 'Branch', value: 'branch.name' },
         { text: 'Payment Type', value: 'payment_type' },
         { text: 'Amount', value: 'amount' },
+        { text: 'Discount', value: 'discount' },
         { text: 'Balance Due', value: 'balance_due' },
         { text: 'Status', value: 'status' },
         { text: '', value: 'actions', sortable: false }

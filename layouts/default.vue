@@ -183,6 +183,7 @@
             </v-list-item-content>
           </v-list-item>
           <v-list-item
+            v-if="$auth.user.type === 'Main Admin'"
             active-class="drawer-menu-item-active"
             to="/sale/saleReturn"
             style="padding-left: 20px"

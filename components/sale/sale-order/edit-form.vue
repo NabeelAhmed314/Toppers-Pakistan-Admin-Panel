@@ -132,6 +132,7 @@
                 :value="item.product"
                 outlined
                 dense
+                :readonly="item.id"
                 :rules="[required]"
                 hide-details
                 flat
@@ -156,6 +157,7 @@
                 v-model="item.variant"
                 outlined
                 dense
+                :readonly="item.id"
                 :rules="[required]"
                 hide-details
                 flat
@@ -348,6 +350,18 @@ export default {
       this.checkBalance()
     },
     quantityChanged(item) {
+      console.log(item)
+      if (item.variants.length > 0) {
+        if (item.qty <= item.variant.stock) {
+          console.log('its ok')
+        } else {
+          console.log('error')
+        }
+      } else if (item.qty < item.stock) {
+        console.log('its ok')
+      } else {
+        console.log('error')
+      }
       if (!item) return
 
       item.amount = parseInt(item.price) * parseInt(item.qty)

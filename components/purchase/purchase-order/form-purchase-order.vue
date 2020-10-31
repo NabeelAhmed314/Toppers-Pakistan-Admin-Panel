@@ -11,7 +11,9 @@
               dense
               flat
               :rules="[type ? required : true]"
+              :search-input.sync="searchSupplier"
               :label="type ? 'Supplier *' : 'Supplier (Optional)'"
+              :value-comparator="(a, b) => a && b && a.id === b.id"
               :items="suppliers"
               item-text="name"
               :hint="
@@ -25,6 +27,17 @@
               :item-value="(item) => item"
               @change="(item) => selectCustomer(item)"
             >
+              <template v-slot:no-data>
+                <span>
+                  <p
+                    style="margin: 0 5px 0 0;text-align: right;cursor: pointer"
+                    @click="saveSupplier"
+                  >
+                    <v-icon>mdi-plus-circle</v-icon>
+                    Add Party
+                  </p>
+                </span>
+              </template>
             </v-autocomplete>
           </div>
           <div class="sale-order-customer-address">
@@ -248,6 +261,7 @@ export default {
           variants: []
         }
       ],
+      searchSupplier: '',
       branches: [],
       branch: null,
       products: [],
@@ -313,11 +327,22 @@ export default {
       this.supplier = i
       this.billingName = i.name
     },
+    async saveSupplier() {
+      if (this.searchSupplier) {
+        console.log(this.searchSupplier)
+        const obj = {
+          name: this.searchSupplier
+        }
+        const response = await this.$axios.$post('supplier/store', obj)
+        await this.getSuppliers()
+        this.selectCustomer(response)
+      }
+    },
     async productChanged(i, index) {
       const setIndex = this.selectedProducts.indexOf(index)
       this.selectedProducts[setIndex].variant = null
       this.selectedProducts[setIndex].variants = await this.$axios.$get(
-        'variant/item/' + i.id
+        'order/variant/item/' + i.id
       )
       if (this.selectedProducts[setIndex].variants.length > 0) {
         this.selectedProducts[setIndex].variant = this.selectedProducts[

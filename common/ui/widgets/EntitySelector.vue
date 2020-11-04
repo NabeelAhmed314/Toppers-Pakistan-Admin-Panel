@@ -47,7 +47,7 @@
         >
           <template v-slot:item.consumption="{ item }">
             <slot name="consumption" :bind="item">
-              <select v-model="item.consumption" style="width: 100%">
+              <select aria-hidden="true" v-model="item.consumption" style="width: 100%">
                 <option>od</option>
                 <option>bd</option>
                 <option>td</option>

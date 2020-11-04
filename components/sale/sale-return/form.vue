@@ -13,21 +13,6 @@
         <div class="sale-order-customer-form">
           <div class="sale-order-customer-name">
             <v-autocomplete
-              v-model="saleReturn.customer_id"
-              outlined
-              dense
-              flat
-              :rules="[required]"
-              label="Customer *"
-              :items="customers"
-              item-text="name"
-              persistent-hint
-              :item-value="(item) => item.id"
-              :readonly="isUpdate"
-              @change="getSaleOrders"
-            >
-            </v-autocomplete>
-            <v-autocomplete
               v-if="!isUpdate"
               v-model="saleReturn.sale_order_id"
               outlined
@@ -43,15 +28,6 @@
               :readonly="isUpdate"
               @change="(item) => showOrderDetail(item)"
             >
-              <template v-slot:no-data>
-                <p style="margin: 0;text-align: center">
-                  {{
-                    saleReturn.customer_id
-                      ? 'No Orders Found'
-                      : 'Please Select Customer First'
-                  }}
-                </p>
-              </template>
             </v-autocomplete>
             <div v-if="showDetail">
               <p>
@@ -169,7 +145,6 @@ export default {
   },
   data: () => {
     return {
-      customers: [],
       orders: [],
       showDetail: false,
       invoiceId: null,
@@ -180,7 +155,7 @@ export default {
     }
   },
   mounted() {
-    this.getCustomers()
+    this.getSaleOrders()
     if (!this.isUpdate) {
       this.getReceiptId()
     } else {
@@ -202,9 +177,6 @@ export default {
         this.saleReturn.payment_type = true
       }
     },
-    async getCustomers() {
-      this.customers = await this.$axios.$get('customer')
-    },
     async getReceiptId() {
       this.saleReturn.invoice_id = await this.$axios.$get(
         '/saleReturn/getInvoice'
@@ -214,15 +186,10 @@ export default {
       this.showDetail = false
       if (this.$auth.user.type === 'Sub Admin') {
         this.orders = await this.$axios.$get(
-          'saleOrder/customer/' +
-            this.saleReturn.customer_id +
-            '/' +
-            this.$auth.user.branch_id
+          'saleOrder/branch/' + this.$auth.user.branch_id
         )
       } else {
-        this.orders = await this.$axios.$get(
-          'saleOrder/customer/' + this.saleReturn.customer_id + '/-1'
-        )
+        this.orders = await this.$axios.$get('saleOrder/branch/-1')
       }
     },
     paid() {

@@ -21,6 +21,7 @@
             <v-text-field
               v-model="searchText"
               placeholder="Search"
+              aria-hidden="true"
               prepend-inner-icon="mdi-magnify"
               outlined
               hide-details
@@ -38,8 +39,9 @@
             v-if="!search"
             color="rgba(233,233,233)"
             size="40"
+            aria-hidden="true"
             @click="search = !search"
-            ><v-icon>mdi-magnify</v-icon></v-avatar
+            ><v-icon aria-hidden="true">mdi-magnify</v-icon></v-avatar
           >
           <v-spacer v-if="!search"></v-spacer>
           <v-btn
@@ -49,6 +51,7 @@
             dark
             elevation="0"
             class="mb-2"
+            aria-hidden="true"
             @click="handleCreateEvent"
             ><v-icon left>mdi-plus</v-icon>New Item</v-btn
           >
@@ -59,6 +62,7 @@
               prepend-inner-icon="mdi-magnify"
               append-icon="mdi-close-circle"
               outlined
+              aria-hidden="true"
               hide-details
               dense
               @click:append="closeSearch"
@@ -75,6 +79,7 @@
             item-text="name"
             item-value="id"
             placeholder="Filter"
+            aria-hidden="true"
             @change="
               (item) => {
                 filterProduct(item)
@@ -89,6 +94,7 @@
           small
           class="mr-2"
           color="green"
+          aria-hidden="true"
           @click.stop.prevent="handleUpdateEvent(item)"
         >
           mdi-pencil
@@ -97,6 +103,7 @@
           v-if="$auth.user.type === 'Main Admin'"
           color="red"
           small
+          aria-hidden="true"
           @click.stop.prevent="removeItem(item)"
         >
           mdi-delete

@@ -200,6 +200,20 @@
             ></v-text-field>
           </div>
           <div
+            style="display: grid; grid-template-columns: 1fr 1fr;margin-bottom: 5px"
+          >
+            <label>Discount</label>
+            <v-text-field
+              v-model="discount"
+              :rules="[(v) => v <= total || 'Discount is Invalid']"
+              dense
+              hide-details
+              outlined
+              placeholder="0.0"
+              @change="discountApply"
+            ></v-text-field>
+          </div>
+          <div
             v-if="type"
             style="display: grid; grid-template-columns: 1fr 1fr;margin-bottom: 5px"
           >
@@ -270,6 +284,7 @@ export default {
       total: null,
       received: null,
       balance: null,
+      discount: null,
       columns: [
         { text: '#', value: 'count', width: '50px', sortable: false },
         { text: 'Product', value: 'product', width: '500px', sortable: false },
@@ -306,6 +321,7 @@ export default {
     async setAmount() {
       this.type = this.order.payment_type === 'Credit'
       this.total = this.order.amount
+      this.discount = this.order.discount
       this.balance = this.order.balance_due
       this.recieved = this.order.amount - this.order.balance_due
       for (const item of this.selectedProducts) {
@@ -347,6 +363,7 @@ export default {
         this.selectedProducts[setIndex].price *
         this.selectedProducts[setIndex].qty
       this.getTotal()
+      this.discountApply()
       this.checkBalance()
     },
     quantityChanged(item) {
@@ -368,6 +385,7 @@ export default {
       this.selectedProducts = Array.from(this.selectedProducts)
 
       this.getTotal()
+      this.discountApply()
       this.checkBalance()
     },
     variantChanged(item) {
@@ -379,6 +397,7 @@ export default {
         this.selectedProducts[setIndex].price *
         this.selectedProducts[setIndex].qty
       this.getTotal()
+      this.discountApply()
       this.checkBalance()
     },
     removeItem(item) {
@@ -386,6 +405,7 @@ export default {
       if (this.selectedProducts.length > 1)
         this.selectedProducts.splice(setIndex, 1)
       this.getTotal()
+      this.discountApply()
       this.checkBalance()
     },
     getTotal() {
@@ -398,12 +418,17 @@ export default {
     checkBalance() {
       this.balance = this.total - this.received
     },
+    discountApply() {
+      this.getTotal()
+      this.total = this.total - this.discount
+    },
     async formData() {
       if (this.$refs.form.validate()) {
         const data = {}
         data.customer = this.order.customer ? this.order.customer.id : null
         data.billingAddress = this.order.billing_address
         data.amount = this.total
+        data.discount = this.discount
         if (this.type) data.balance = this.balance
         data.items = []
         for (const item of this.selectedProducts) {

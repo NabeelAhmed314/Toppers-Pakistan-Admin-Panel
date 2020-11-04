@@ -2,19 +2,20 @@
   <v-card class="data-viewer" elevation="8">
     <v-card-title class="data-viewer__title">
       <v-btn v-if="back" icon style="margin-right: 50px" @click="returnBack">
-        <v-icon>mdi-keyboard-backspace</v-icon>
+        <v-icon aria-hidden="true">mdi-keyboard-backspace</v-icon>
       </v-btn>
       <span>{{ title }}</span>
       <v-spacer />
 
       <v-btn
+        aria-hidden="true"
         v-if="create"
         color="primary"
         elevation="0"
         style="padding: 0 13px 0 7px !important; border-radius: 4px; margin-right: 10px"
         @click="handleCreateEvent"
       >
-        <v-icon small>mdi-plus</v-icon>
+        <v-icon small aria-hidden="true">mdi-plus</v-icon>
 
         <span>Add New</span>
       </v-btn>
@@ -35,8 +36,8 @@
       <!--        </v-sheet>-->
       <!--      </v-bottom-sheet>-->
 
-      <v-btn icon @click="load">
-        <v-icon>mdi-reload</v-icon>
+      <v-btn aria-hidden="true" icon @click="load">
+        <v-icon aria-hidden="true">mdi-reload</v-icon>
       </v-btn>
     </v-card-title>
 
@@ -48,6 +49,7 @@
         dense
         filled
         outlined
+        aria-hidden="true"
         style="margin-left: auto; width: 450px; margin-right: 20px"
         prepend-inner-icon="mdi-magnify"
       />
@@ -211,6 +213,7 @@
           style="margin: 5px"
           size="20"
           color="green"
+          aria-hidden="true"
           @click="detailItem(item)"
           >mdi-clipboard</v-icon
         >
@@ -219,6 +222,7 @@
           size="20"
           style="margin: 5px"
           color="green"
+          aria-hidden="true"
           @click="approveItem(item)"
           >mdi-check-circle</v-icon
         >
@@ -227,6 +231,7 @@
           style="margin: 5px"
           size="20"
           color="red"
+          aria-hidden="true"
           @click="rejectItem(item)"
           >mdi-close-circle</v-icon
         >
@@ -235,6 +240,7 @@
           style="margin: 5px"
           size="20"
           color="green"
+          aria-hidden="true"
           @click="changeItem(item)"
           >mdi-pencil</v-icon
         >
@@ -243,6 +249,7 @@
           style="margin: 5px"
           size="20"
           color="red"
+          aria-hidden="true"
           @click="removeItem(item)"
           >mdi-delete</v-icon
         >
@@ -251,6 +258,7 @@
           style="margin: 5px"
           size="20"
           color="red"
+          aria-hidden="true"
           @click="blockItem(item)"
           >mdi-block-helper</v-icon
         >
@@ -259,6 +267,7 @@
           style="margin: 5px"
           small
           color="green"
+          aria-hidden="true"
           @click="unblockItem(item)"
           >mdi-check</v-icon
         >

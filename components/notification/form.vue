@@ -20,7 +20,7 @@
             md="1"
             sm="1"
           >
-            <v-btn icon @click="returnBack">
+            <v-btn aria-hidden="true" icon @click="returnBack">
               <v-icon>mdi-keyboard-backspace</v-icon>
             </v-btn>
           </v-col>

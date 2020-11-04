@@ -10,7 +10,7 @@
         style="padding: 0 13px 0 7px !important; border-radius: 4px; margin-right: 10px"
         @click="generatePDF"
       >
-        <v-icon small color="white">mdi-printer-eye</v-icon>
+        <v-icon aria-hidden="true" small color="white">mdi-printer-eye</v-icon>
         <span style="margin-left: 10px;color:white">PDF</span>
       </v-btn>
     </v-card-title>

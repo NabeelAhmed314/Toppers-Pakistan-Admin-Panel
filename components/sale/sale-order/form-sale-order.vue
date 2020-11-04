@@ -206,7 +206,7 @@
               dense
               hide-details
               placeholder="0.0"
-              @change="checkBalance"
+              @change="discountApply"
             ></v-text-field>
           </div>
           <div
@@ -412,16 +412,11 @@ export default {
       this.total = total
     },
     checkBalance() {
-      if (this.discount && this.received) {
-        this.balance =
-          this.total - (parseInt(this.received) + parseInt(this.discount))
-      }
-      if (!this.discount && this.received) {
-        this.balance = this.total - this.received
-      }
-      if (this.discount && !this.received) {
-        this.balance = this.total - this.discount
-      }
+      this.balance = this.total - this.received
+    },
+    discountApply() {
+      this.getTotal()
+      this.total = this.total - this.discount
     },
     async formData() {
       if (this.$refs.form.validate()) {
@@ -440,6 +435,7 @@ export default {
         for (const item of this.selectedProducts) {
           data.items.push({ item })
         }
+        console.log(data)
         await this.$axios.$post('saleOrder/store', data)
         this.$router.back()
       }

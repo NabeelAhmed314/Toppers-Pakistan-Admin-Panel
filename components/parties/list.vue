@@ -18,13 +18,14 @@
             color="rgba(233,233,233)"
             size="40"
             @click="search = !search"
-            ><v-icon>mdi-magnify</v-icon></v-avatar
+            ><v-icon aria-hidden="true">mdi-magnify</v-icon></v-avatar
           >
           <v-spacer v-if="!search"></v-spacer>
           <v-btn
             v-if="!search"
             style="margin-bottom: 0 !important;"
             color="primary"
+            aria-hidden="true"
             dark
             elevation="0"
             class="mb-2"
@@ -38,6 +39,7 @@
               prepend-inner-icon="mdi-magnify"
               append-icon="mdi-close-circle"
               outlined
+              aria-hidden="true"
               hide-details
               dense
               @click:append="closeSearch"
@@ -51,11 +53,17 @@
           small
           class="mr-2"
           color="green"
+          aria-hidden="true"
           @click.stop.prevent="handleUpdateEvent(item)"
         >
           mdi-pencil
         </v-icon>
-        <v-icon color="red" small @click.stop.prevent="removeItem(item)">
+        <v-icon
+          color="red"
+          aria-hidden="true"
+          small
+          @click.stop.prevent="removeItem(item)"
+        >
           mdi-delete
         </v-icon>
       </template>

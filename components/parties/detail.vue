@@ -48,6 +48,7 @@
               v-model="search"
               placeholder="Search"
               prepend-inner-icon="mdi-magnify"
+              aria-hidden="true"
               outlined
               hide-details
               dense

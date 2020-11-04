@@ -17,6 +17,7 @@
             v-if="!search"
             color="rgba(233,233,233)"
             size="40"
+            aria-hidden="true"
             @click="search = !search"
             ><v-icon>mdi-magnify</v-icon></v-avatar
           >
@@ -25,6 +26,7 @@
             v-if="!search"
             style="margin-bottom: 0 !important;"
             color="primary"
+            aria-hidden="true"
             dark
             elevation="0"
             class="mb-2"
@@ -36,6 +38,7 @@
               v-model="searchText"
               placeholder="Search"
               prepend-inner-icon="mdi-magnify"
+              aria-hidden="true"
               append-icon="mdi-close-circle"
               outlined
               hide-details
@@ -54,6 +57,7 @@
             item-text="name"
             item-value="id"
             placeholder="Filter"
+            aria-hidden="true"
             @change="
               (item) => {
                 filterProduct(item)
@@ -67,11 +71,17 @@
           small
           class="mr-2"
           color="green"
+          aria-hidden="true"
           @click.stop.prevent="handleUpdateEvent(item)"
         >
           mdi-pencil
         </v-icon>
-        <v-icon color="red" small @click.stop.prevent="removeItem(item)">
+        <v-icon
+          aria-hidden="true"
+          color="red"
+          small
+          @click.stop.prevent="removeItem(item)"
+        >
           mdi-delete
         </v-icon>
       </template>

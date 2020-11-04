@@ -375,6 +375,7 @@
       <v-btn
         style="color: #bc282b;margin-right: 30px;text-align: center"
         icon
+        aria-hidden="true"
         @click.stop="drawer = !drawer"
       >
         <v-icon>mdi-menu</v-icon>
@@ -392,6 +393,7 @@
       <v-spacer />
       <div v-if="$auth.user.type === 'Main Admin'" style="width: 250px">
         <v-text-field
+          aria-hidden="true"
           placeholder="Search"
           prepend-inner-icon="mdi-magnify"
           outlined

@@ -5,6 +5,7 @@
         <v-select
           v-model="type"
           :items="items"
+          aria-hidden="true"
           dense
           outlined
           @change="getData"
@@ -16,6 +17,7 @@
             :rules="[required]"
             dense
             type="date"
+            aria-hidden="true"
             outlined
             label="From"
             @change="getCustom"
@@ -24,6 +26,7 @@
             v-if="type === 'Custom'"
             v-model="dates.to"
             :rules="[required]"
+            aria-hidden="true"
             dense
             type="date"
             outlined
@@ -40,14 +43,14 @@
             <p style="margin: 0">Paid</p>
             <h2>Rs {{ paid }}</h2>
           </v-card>
-          <v-icon right>mdi-plus</v-icon>
+          <v-icon aria-hidden="true" right>mdi-plus</v-icon>
         </div>
         <div style="display: flex">
           <v-card style="padding: 0 10px;width: 90%">
             <p style="margin: 0">Unpaid</p>
             <h2>Rs {{ unpaid }}</h2>
           </v-card>
-          <v-icon right>mdi-equal</v-icon>
+          <v-icon aria-hidden="true" right>mdi-equal</v-icon>
         </div>
         <v-card style="padding: 0 10px;width: 90%">
           <p style="margin: 0">Total</p>
@@ -76,6 +79,7 @@
               <v-text-field
                 v-model="search"
                 placeholder="Search"
+                aria-hidden="true"
                 prepend-inner-icon="mdi-magnify"
                 outlined
                 hide-details
@@ -91,6 +95,7 @@
               dark
               elevation="0"
               class="mb-2"
+              aria-hidden="true"
               @click="handleCreateEvent"
               ><v-icon left>mdi-plus</v-icon>New Sale</v-btn
             >
@@ -101,11 +106,17 @@
             color="green"
             small
             class="mr-2"
+            aria-hidden="true"
             @click.stop.prevent="handleUpdateEvent(item)"
           >
             mdi-pencil
           </v-icon>
-          <v-icon color="red" small @click.stop.prevent="removeItem(item)">
+          <v-icon
+            aria-hidden="true"
+            color="red"
+            small
+            @click.stop.prevent="removeItem(item)"
+          >
             mdi-delete
           </v-icon>
         </template>

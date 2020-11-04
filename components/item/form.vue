@@ -15,7 +15,7 @@
             md="1"
             sm="1"
           >
-            <v-btn icon @click="returnBack">
+            <v-btn aria-hidden="true" icon @click="returnBack">
               <v-icon>mdi-keyboard-backspace</v-icon>
             </v-btn>
           </v-col>
@@ -160,6 +160,7 @@
                 <v-btn
                   color="#FF974D"
                   style="color:#ffffff"
+                  aria-hidden="true"
                   @click="addOption()"
                   >Add Option
                 </v-btn>
@@ -186,7 +187,7 @@
                 />
               </v-col>
               <v-col cols="12" md="1" sm="1">
-                <v-btn icon @click="removeOption(i)">
+                <v-btn aria-hidden="true" icon @click="removeOption(i)">
                   <v-icon color="red">mdi-delete</v-icon>
                 </v-btn>
               </v-col>
@@ -257,13 +258,14 @@
                         'images/items/' +
                         image.name
                     "
-                    alt=""
+                    alt="itemImage"
                   />
                   <div class="image-overlay">
                     <v-btn
                       icon
                       outlined
                       color="white"
+                      aria-hidden="true"
                       style="margin-right: 10px"
                       @click="deleteImage(i)"
                     >
@@ -272,6 +274,7 @@
                     <v-btn
                       icon
                       outlined
+                      aria-hidden="true"
                       color="white"
                       @click="openImage(image.name)"
                     >

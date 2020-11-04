@@ -4,7 +4,11 @@
       <div style="display: flex;margin:15px 0">
         <p style="margin: 0">{{ item.name }}</p>
         <v-spacer />
-        <v-btn color="primary" small @click="adjust = !adjust"
+        <v-btn
+          aria-hidden="true"
+          color="primary"
+          small
+          @click="adjust = !adjust"
           >Adjust Item</v-btn
         >
       </div>
@@ -43,6 +47,7 @@
               v-model="search"
               placeholder="Search"
               prepend-inner-icon="mdi-magnify"
+              aria-hidden="true"
               outlined
               hide-details
               dense
@@ -58,6 +63,7 @@
           color="green"
           small
           class="mr-2"
+          aria-hidden="true"
           @click.stop.prevent="update(item)"
         >
           mdi-pencil
@@ -66,6 +72,7 @@
           v-if="item.action_type < 3"
           color="red"
           small
+          aria-hidden="true"
           @click.stop.prevent="removeItem(item)"
         >
           mdi-delete
@@ -76,11 +83,17 @@
           color="green"
           small
           class="mr-2"
+          aria-hidden="true"
           @click.stop.prevent="update(item)"
         >
           mdi-pencil
         </v-icon>
-        <v-icon color="red" small @click.stop.prevent="removeItem(item)">
+        <v-icon
+          aria-hidden="true"
+          color="red"
+          small
+          @click.stop.prevent="removeItem(item)"
+        >
           mdi-delete
         </v-icon>
       </template>

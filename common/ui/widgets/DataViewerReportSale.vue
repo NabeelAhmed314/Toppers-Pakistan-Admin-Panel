@@ -1,7 +1,7 @@
 <template>
   <v-card class="data-viewer" elevation="8">
     <v-card-title class="data-viewer__title">
-      <v-btn v-if="back" icon style="margin-right: 50px" @click="returnBack">
+      <v-btn aria-hidden="true" v-if="back" icon style="margin-right: 50px" @click="returnBack">
         <v-icon>mdi-keyboard-backspace</v-icon>
       </v-btn>
       <span>{{ title }}</span>

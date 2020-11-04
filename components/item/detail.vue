@@ -8,6 +8,7 @@
           v-if="$auth.user.type === 'Main Admin'"
           color="primary"
           small
+          aria-hidden="true"
           @click="
             () => {
               adjust = !adjust
@@ -56,6 +57,7 @@
               prepend-inner-icon="mdi-magnify"
               outlined
               hide-details
+              aria-hidden="true"
               dense
               clearable
             >
@@ -64,6 +66,7 @@
           <v-btn
             v-if="!item.stock"
             style="margin: 0 10px"
+            aria-hidden="true"
             color="primary"
             @click="openVariant"
             >Details</v-btn
@@ -76,6 +79,7 @@
           color="green"
           small
           class="mr-2"
+          aria-hidden="true"
           @click.stop.prevent="update(item)"
         >
           mdi-pencil

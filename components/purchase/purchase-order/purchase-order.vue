@@ -5,6 +5,7 @@
         <v-select
           v-model="type"
           :items="items"
+          aria-hidden="true"
           dense
           outlined
           @change="getData"
@@ -15,6 +16,7 @@
             v-model="dates.from"
             :rules="[required]"
             dense
+            aria-hidden="true"
             type="date"
             outlined
             label="From"
@@ -25,6 +27,7 @@
             v-model="dates.to"
             :rules="[required]"
             dense
+            aria-hidden="true"
             type="date"
             outlined
             label="To"
@@ -40,7 +43,7 @@
             <p style="margin: 0">Paid</p>
             <h2>Rs {{ paid }}</h2>
           </v-card>
-          <v-icon right>mdi-plus</v-icon>
+          <v-icon aria-hidden="true" right>mdi-plus</v-icon>
         </div>
         <div style="display: flex">
           <v-card style="padding: 0 10px;width: 90%">
@@ -77,6 +80,7 @@
                 v-model="search"
                 placeholder="Search"
                 prepend-inner-icon="mdi-magnify"
+                aria-hidden="true"
                 outlined
                 hide-details
                 dense
@@ -90,6 +94,7 @@
               color="primary"
               dark
               elevation="0"
+              aria-hidden="true"
               class="mb-2"
               @click="handleCreateEvent"
               ><v-icon left>mdi-plus</v-icon>New Purchase</v-btn
@@ -101,11 +106,17 @@
             color="green"
             small
             class="mr-2"
+            aria-hidden="true"
             @click.stop.prevent="handleUpdateEvent(item)"
           >
             mdi-pencil
           </v-icon>
-          <v-icon color="red" small @click.stop.prevent="removeItem(item)">
+          <v-icon
+            aria-hidden="true"
+            color="red"
+            small
+            @click.stop.prevent="removeItem(item)"
+          >
             mdi-delete
           </v-icon>
         </template>

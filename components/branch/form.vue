@@ -147,7 +147,6 @@ export default {
         return null
       }
       formData.append('restaurant', 1)
-      // formData.forEach((item) => window.console.log(item))
       return formData
     }
   }

@@ -6,13 +6,13 @@
         <div class="my-dashboard-card">
           <v-card style="padding: 5px;">
             <p>Sale:</p>
-            <p style="text-align: center;color:#1FAF9D;margin: 40px 0">
+            <p style="text-align: center;color:#2E7F73;margin: 40px 0">
               Rs {{ dashboard.sale }}
             </p>
           </v-card>
           <v-card style="padding: 5px">
             <p>To Receive:</p>
-            <p style="text-align: center;color:#1FAF9D;margin: 40px 0">
+            <p style="text-align: center;color:#2E7F73;margin: 40px 0">
               Rs {{ dashboard.toReceive }}
             </p>
           </v-card>
@@ -25,13 +25,13 @@
         <div class="my-dashboard-card">
           <v-card style="padding: 5px">
             <p>Total Stock:</p>
-            <p style="text-align: center;color:#1FAF9D;margin: 40px 0">
+            <p style="text-align: center;color:#2E7F73;margin: 40px 0">
               {{ dashboard.stock }}
             </p>
           </v-card>
           <v-card style="padding: 5px">
             <p>Stock Value:</p>
-            <p style="text-align: center;color:#1FAF9D;margin: 40px 0">
+            <p style="text-align: center;color:#2E7F73;margin: 40px 0">
               Rs {{ dashboard.stockValue }}
             </p>
           </v-card>
@@ -44,13 +44,13 @@
         <div class="my-dashboard-card">
           <v-card style="padding: 5px">
             <p>Purchase:</p>
-            <p style="text-align: center;color:#1FAF9D;margin: 40px 0">
+            <p style="text-align: center;color:#2E7F73;margin: 40px 0">
               Rs {{ dashboard.purchase }}
             </p>
           </v-card>
           <v-card style="padding: 5px">
             <p>To Pay:</p>
-            <p style="text-align: center;color:red;margin: 40px 0">
+            <p style="text-align: center;color:#EB0000;margin: 40px 0">
               Rs {{ dashboard.toPay }}
             </p>
           </v-card>
@@ -63,13 +63,13 @@
         <div class="my-dashboard-card">
           <v-card style="padding: 5px">
             <p>Cash in hand:</p>
-            <p style="text-align: center;color:#1FAF9D;margin: 40px 0">
+            <p style="text-align: center;color:#2E7F73;margin: 40px 0">
               Rs {{ dashboard.cash }}
             </p>
           </v-card>
           <v-card style="padding: 5px">
             <p>Expense:</p>
-            <p style="text-align: center;color: red;margin: 40px 0">
+            <p style="text-align: center;color: #EB0000;margin: 40px 0">
               Rs {{ dashboard.expense }}
             </p>
           </v-card>

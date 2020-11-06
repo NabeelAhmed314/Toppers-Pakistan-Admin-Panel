@@ -125,7 +125,6 @@ export default {
       this.$router.push(this.updateRoute.replace('$id', item.id))
     },
     async removeItem(item) {
-      window.console.log(item)
       if (confirm('Are you sure?')) {
         const response = await this.$axios.$delete(
           this.deleteRoute.replace('$id', item.id)

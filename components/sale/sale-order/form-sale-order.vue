@@ -338,13 +338,11 @@ export default {
       this.products = await this.$axios.$get('item/filter/' + i)
     },
     selectCustomer(i) {
-      console.log(i)
       this.customer = i
       this.billingName = i.name
     },
     async saveCustomer() {
       if (this.searchCustomer) {
-        console.log(this.searchCustomer)
         const obj = {
           name: this.searchCustomer
         }
@@ -435,7 +433,6 @@ export default {
         for (const item of this.selectedProducts) {
           data.items.push({ item })
         }
-        console.log(data)
         await this.$axios.$post('saleOrder/store', data)
         this.$router.back()
       }

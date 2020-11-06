@@ -159,7 +159,7 @@
               >
                 <v-btn
                   color="#FF974D"
-                  style="color:#ffffff"
+                  style="color:#494237"
                   aria-hidden="true"
                   @click="addOption()"
                   >Add Option

@@ -150,7 +150,6 @@ export default {
           return null
         }
       }
-      formData.forEach((item) => window.console.log(item))
       return formData
     }
   }

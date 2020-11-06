@@ -146,7 +146,7 @@
               >
                 <v-btn
                   color="#FF974D"
-                  style="color:#ffffff"
+                  style="color:#494237"
                   @click="addOption()"
                   >Add Option
                 </v-btn>

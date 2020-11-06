@@ -45,6 +45,7 @@
                 prepend-inner-icon="mdi-magnify"
                 outlined
                 hide-details
+                aria-hidden="true"
                 dense
                 clearable
               >
@@ -57,6 +58,7 @@
               dark
               elevation="0"
               class="mb-2"
+              aria-hidden="true"
               @click="handleCreateEvent"
               ><v-icon left>mdi-plus</v-icon>New Payment Out</v-btn
             >
@@ -67,11 +69,17 @@
             color="green"
             small
             class="mr-2"
+            aria-hidden="true"
             @click="handleUpdateEvent(item)"
           >
             mdi-pencil
           </v-icon>
-          <v-icon color="red" small @click.stop.prevent="removeItem(item)">
+          <v-icon
+            aria-hidden="true"
+            color="red"
+            small
+            @click.stop.prevent="removeItem(item)"
+          >
             mdi-delete
           </v-icon>
         </template>

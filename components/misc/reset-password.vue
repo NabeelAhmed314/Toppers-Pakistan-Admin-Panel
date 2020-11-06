@@ -52,7 +52,7 @@
         <v-btn
           width="100%"
           color="#FF974D"
-          style="color:#ffffff"
+          style="color:#494237"
           large
           elevation="0"
           @click="reset"

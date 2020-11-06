@@ -142,7 +142,6 @@ export default {
       }
     },
     async removeItem(item) {
-      window.console.log(item)
       if (confirm('Are you sure?')) {
         const response = await this.$axios.$delete(
           this.deleteRoute.replace('$id', item.id)

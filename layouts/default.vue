@@ -382,12 +382,10 @@
       </v-btn>
       <nuxt-link to="/">
         <img
-          style="margin: auto 0"
+          style="margin: auto 0;max-width: 40px;max-height: 40px"
           alt="main-logo"
           class="mx-2"
           src="~/assets/images/ToppersPakistanLogo.png"
-          width="40px"
-          height="40px"
         />
       </nuxt-link>
       <v-spacer />

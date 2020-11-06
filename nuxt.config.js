@@ -9,8 +9,10 @@ export default {
     htmlAttrs: {
       lang: 'en'
     },
-    titleTemplate: 'Toppers Pakistan - Admin',
-    title: process.env.npm_package_name || '',
+    titleTemplate(titleChunk) {
+      return titleChunk ? `${titleChunk}` : 'Toppers Pakistan - Admin'
+    },
+    title: 'Toppers Pakistan - Admin',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -62,7 +64,7 @@ export default {
    */
   axios: {
     // baseURL: 'https://api.toppers-mart.com/api/'
-    baseURL: 'http://192.168.1.40:8000/api/'
+    baseURL: 'http://192.168.100.23:8000/api/'
   },
   auth: {
     strategies: {

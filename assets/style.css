@@ -30,3 +30,14 @@ tr:nth-child(odd) {
   font-family: "Google Sans Medium";
   text-transform: capitalize !important;
 }
+
+.theme--light.v-data-table .v-data-table__empty-wrapper {
+  color: #737373 !important;
+}
+.theme--light.v-select .v-select__selection--disabled {
+  color: #737373 !important;
+}
+@font-face {
+  font-display: swap;
+}
+

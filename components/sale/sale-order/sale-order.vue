@@ -112,8 +112,29 @@
             mdi-pencil
           </v-icon>
           <v-icon
+            v-if="item.balance_due > 0"
+            aria-hidden="true"
+            class="mr-2"
+            color="green"
+            small
+            @click.stop.prevent="markAsPaid(item)"
+          >
+            mdi-check
+          </v-icon>
+          <v-icon
+            v-if="item.delivery > 0 && item.delivery_status === 'Pending'"
+            aria-hidden="true"
+            class="mr-2"
+            color="green"
+            small
+            @click.stop.prevent="markAsComplete(item)"
+          >
+            mdi-check-circle
+          </v-icon>
+          <v-icon
             aria-hidden="true"
             color="red"
+            class="mr-2"
             small
             @click.stop.prevent="removeItem(item)"
           >
@@ -128,10 +149,19 @@
             Rs. {{ item.balance_due ? item.balance_due : '0.0' }}
           </p>
         </template>
+        <template v-slot:item.delivery_status="{ item }">
+          <p v-if="item.delivery > 0" style="margin: 0">
+            {{ item.delivery_status }}
+          </p>
+        </template>
         <template v-slot:item.status="{ item }">
           <p style="margin: 0">
             {{ getStatus(item.amount, item.balance_due) }}
           </p>
+        </template>
+        <template v-slot:item.invoice_date="{ item }">
+          <slot name="invoice_date" :item="item" />
+          {{ date(item.invoice_date) }}
         </template>
       </v-data-table>
     </div>
@@ -197,6 +227,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { required } from '@/common/lib/validator'
 
 export default {
@@ -233,11 +264,13 @@ export default {
         { text: 'Invoice No.', value: 'invoice_id' },
         { text: 'Customer Name', value: 'customer.name' },
         { text: 'Branch', value: 'branch.name' },
+        { text: 'Origin', value: 'origin' },
         { text: 'Payment Type', value: 'payment_type' },
         { text: 'Amount', value: 'amount' },
         { text: 'Discount', value: 'discount' },
         { text: 'Balance Due', value: 'balance_due' },
         { text: 'Status', value: 'status' },
+        { text: 'Delivery Status', value: 'delivery_status' },
         { text: '', value: 'actions', sortable: false }
       ],
       detailColumns: [
@@ -301,6 +334,35 @@ export default {
           this.error = response.error
         } else {
           await this.getData()
+          await this.getSummary()
+        }
+      }
+    },
+    async markAsPaid(item) {
+      if (confirm('Are you sure?')) {
+        const response = await this.$axios.$get('/saleOrder/paid/' + item.id)
+        if (response.error) {
+          this.showError = true
+          this.error = response.error
+        } else {
+          this.showDetail = false
+          await this.getData()
+          await this.getSummary()
+        }
+      }
+    },
+    async markAsComplete(item) {
+      if (confirm('Are you sure?')) {
+        const response = await this.$axios.$get(
+          '/saleOrder/complete/' + item.id
+        )
+        if (response.error) {
+          this.showError = true
+          this.error = response.error
+        } else {
+          this.showDetail = false
+          await this.getData()
+          await this.getSummary()
         }
       }
     },
@@ -337,6 +399,7 @@ export default {
         }
       }
     },
+    date: (date) => moment(date).format('MM/DD/YY'),
     getStatus(total, due) {
       if (due) {
         if (due === total) {

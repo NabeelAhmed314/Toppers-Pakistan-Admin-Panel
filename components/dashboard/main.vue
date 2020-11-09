@@ -1,81 +1,89 @@
 <template>
-  <div class="my-dashboard-main">
-    <nuxt-link to="/sale/saleOrder" style="text-decoration: none">
-      <div>
-        <p>Sale</p>
-        <div class="my-dashboard-card">
-          <v-card style="padding: 5px;">
-            <p>Sale:</p>
-            <p style="text-align: center;color:#2E7F73;margin: 40px 0">
-              Rs {{ dashboard.sale }}
-            </p>
-          </v-card>
-          <v-card style="padding: 5px">
-            <p>To Receive:</p>
-            <p style="text-align: center;color:#2E7F73;margin: 40px 0">
-              Rs {{ dashboard.toReceive }}
-            </p>
-          </v-card>
+  <div>
+    <h1 v-if="$auth.user.branch" style="text-align: center;color: #bc282b">
+      {{ $auth.user.branch.name }}
+    </h1>
+    <h1 v-else style="text-align: center;color: #bc282b">
+      Main Admin
+    </h1>
+    <div class="my-dashboard-main">
+      <nuxt-link to="/sale/saleOrder" style="text-decoration: none">
+        <div>
+          <p>Sale</p>
+          <div class="my-dashboard-card">
+            <v-card style="padding: 5px;">
+              <p>Sale:</p>
+              <p style="text-align: center;color:#2E7F73;margin: 40px 0">
+                Rs {{ dashboard.sale }}
+              </p>
+            </v-card>
+            <v-card style="padding: 5px">
+              <p>To Receive:</p>
+              <p style="text-align: center;color:#2E7F73;margin: 40px 0">
+                Rs {{ dashboard.toReceive }}
+              </p>
+            </v-card>
+          </div>
         </div>
-      </div>
-    </nuxt-link>
-    <nuxt-link to="/item" style="text-decoration: none">
-      <div>
-        <p>Stock</p>
-        <div class="my-dashboard-card">
-          <v-card style="padding: 5px">
-            <p>Total Stock:</p>
-            <p style="text-align: center;color:#2E7F73;margin: 40px 0">
-              {{ dashboard.stock }}
-            </p>
-          </v-card>
-          <v-card style="padding: 5px">
-            <p>Stock Value:</p>
-            <p style="text-align: center;color:#2E7F73;margin: 40px 0">
-              Rs {{ dashboard.stockValue }}
-            </p>
-          </v-card>
+      </nuxt-link>
+      <nuxt-link to="/item" style="text-decoration: none">
+        <div>
+          <p>Stock</p>
+          <div class="my-dashboard-card">
+            <v-card style="padding: 5px">
+              <p>Total Stock:</p>
+              <p style="text-align: center;color:#2E7F73;margin: 40px 0">
+                {{ dashboard.stock }}
+              </p>
+            </v-card>
+            <v-card style="padding: 5px">
+              <p>Stock Value:</p>
+              <p style="text-align: center;color:#2E7F73;margin: 40px 0">
+                Rs {{ dashboard.stockValue }}
+              </p>
+            </v-card>
+          </div>
         </div>
-      </div>
-    </nuxt-link>
-    <nuxt-link to="/purchase/purchaseOrder" style="text-decoration: none">
-      <div>
-        <p>Purchase</p>
-        <div class="my-dashboard-card">
-          <v-card style="padding: 5px">
-            <p>Purchase:</p>
-            <p style="text-align: center;color:#2E7F73;margin: 40px 0">
-              Rs {{ dashboard.purchase }}
-            </p>
-          </v-card>
-          <v-card style="padding: 5px">
-            <p>To Pay:</p>
-            <p style="text-align: center;color:#EB0000;margin: 40px 0">
-              Rs {{ dashboard.toPay }}
-            </p>
-          </v-card>
+      </nuxt-link>
+      <nuxt-link to="/purchase/purchaseOrder" style="text-decoration: none">
+        <div>
+          <p>Purchase</p>
+          <div class="my-dashboard-card">
+            <v-card style="padding: 5px">
+              <p>Purchase:</p>
+              <p style="text-align: center;color:#2E7F73;margin: 40px 0">
+                Rs {{ dashboard.purchase }}
+              </p>
+            </v-card>
+            <v-card style="padding: 5px">
+              <p>To Pay:</p>
+              <p style="text-align: center;color:#EB0000;margin: 40px 0">
+                Rs {{ dashboard.toPay }}
+              </p>
+            </v-card>
+          </div>
         </div>
-      </div>
-    </nuxt-link>
-    <nuxt-link to="/expense" style="text-decoration: none">
-      <div>
-        <p>Cash & Expense</p>
-        <div class="my-dashboard-card">
-          <v-card style="padding: 5px">
-            <p>Cash in hand:</p>
-            <p style="text-align: center;color:#2E7F73;margin: 40px 0">
-              Rs {{ dashboard.cash }}
-            </p>
-          </v-card>
-          <v-card style="padding: 5px">
-            <p>Expense:</p>
-            <p style="text-align: center;color: #EB0000;margin: 40px 0">
-              Rs {{ dashboard.expense }}
-            </p>
-          </v-card>
+      </nuxt-link>
+      <nuxt-link to="/expense" style="text-decoration: none">
+        <div>
+          <p>Cash & Expense</p>
+          <div class="my-dashboard-card">
+            <v-card style="padding: 5px">
+              <p>Cash in hand:</p>
+              <p style="text-align: center;color:#2E7F73;margin: 40px 0">
+                Rs {{ dashboard.cash }}
+              </p>
+            </v-card>
+            <v-card style="padding: 5px">
+              <p>Expense:</p>
+              <p style="text-align: center;color: #EB0000;margin: 40px 0">
+                Rs {{ dashboard.expense }}
+              </p>
+            </v-card>
+          </div>
         </div>
-      </div>
-    </nuxt-link>
+      </nuxt-link>
+    </div>
   </div>
 </template>
 

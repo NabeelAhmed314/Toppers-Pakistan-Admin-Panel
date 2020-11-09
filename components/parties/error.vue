@@ -17,6 +17,17 @@
         <p v-else style="margin-top: 20px;text-align: center">
           Could not change password!!
         </p>
+        <nuxt-link v-if="admin" to="/" style="text-decoration: none">
+          <v-btn
+            width="100%"
+            color="#FF974D"
+            style="color:#494237;text-decoration: none"
+            large
+            elevation="0"
+          >
+            Login
+          </v-btn>
+        </nuxt-link>
       </v-container>
     </v-card>
   </v-container>
@@ -27,6 +38,10 @@ export default {
   name: 'ChangePasswordError',
   props: {
     token: {
+      type: Boolean,
+      default: false
+    },
+    admin: {
       type: Boolean,
       default: false
     }

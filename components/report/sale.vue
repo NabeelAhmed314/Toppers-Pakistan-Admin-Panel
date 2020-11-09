@@ -68,7 +68,6 @@
         disable-pagination
         hide-default-footer
         dense
-        @click:row="getDetail"
       >
         <template v-slot:top>
           <v-toolbar dense flat>
@@ -90,100 +89,17 @@
             </div>
             <v-spacer></v-spacer>
             <v-btn
+              v-if="data.length > 0"
               style="margin-bottom: 0 !important;"
               color="primary"
               dark
               elevation="0"
               class="mb-2"
               aria-hidden="true"
-              @click="handleCreateEvent"
-              ><v-icon left>mdi-plus</v-icon>New Sale</v-btn
+              @click="printReport"
+              ><v-icon left>mdi-printer</v-icon>Print</v-btn
             >
           </v-toolbar>
-        </template>
-        <template v-slot:item.actions="{ item }">
-          <v-tooltip left>
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon
-                color="grey"
-                small
-                class="mr-2"
-                aria-hidden="true"
-                v-bind="attrs"
-                v-on="on"
-                @click.stop.prevent="getPDF(item)"
-              >
-                mdi-printer
-              </v-icon>
-            </template>
-            <span>Print Invoice</span>
-          </v-tooltip>
-          <v-tooltip left>
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon
-                color="green"
-                small
-                class="mr-2"
-                aria-hidden="true"
-                v-bind="attrs"
-                v-on="on"
-                @click.stop.prevent="handleUpdateEvent(item)"
-              >
-                mdi-pencil
-              </v-icon>
-            </template>
-            <span>Edit</span>
-          </v-tooltip>
-          <v-tooltip left>
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon
-                v-if="item.balance_due > 0"
-                aria-hidden="true"
-                class="mr-2"
-                color="green"
-                v-bind="attrs"
-                small
-                v-on="on"
-                @click.stop.prevent="markAsPaid(item)"
-              >
-                mdi-check
-              </v-icon>
-            </template>
-            <span>Mark As Paid</span>
-          </v-tooltip>
-          <v-tooltip left>
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon
-                v-if="item.delivery > 0 && item.delivery_status === 'Pending'"
-                aria-hidden="true"
-                class="mr-2"
-                color="green"
-                v-bind="attrs"
-                small
-                v-on="on"
-                @click.stop.prevent="markAsComplete(item)"
-              >
-                mdi-check-circle
-              </v-icon>
-            </template>
-            <span>Mark As Complete</span>
-          </v-tooltip>
-          <v-tooltip left>
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon
-                aria-hidden="true"
-                color="red"
-                class="mr-2"
-                small
-                v-bind="attrs"
-                v-on="on"
-                @click.stop.prevent="removeItem(item)"
-              >
-                mdi-delete
-              </v-icon>
-            </template>
-            <span>Delete</span>
-          </v-tooltip>
         </template>
         <template v-slot:item.amount="{ item }">
           <p style="margin: 0">Rs. {{ item.amount }}</p>
@@ -209,64 +125,6 @@
         </template>
       </v-data-table>
     </div>
-    <v-dialog v-model="showDetail" width="70%">
-      <v-card v-if="detail" style="padding: 20px">
-        <v-card-title>Sale Order Detail</v-card-title>
-        <div style="display: grid;grid-template-columns: 1fr 1fr">
-          <p style="font-weight: 700">Customer Name:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">
-            {{ detail.customer ? detail.customer.name : 'No Customer' }}
-          </p>
-        </div>
-        <div style="display: grid;grid-template-columns: 1fr 1fr">
-          <p style="font-weight: 700">Invoice Id:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">{{ detail.invoice_id }}</p>
-        </div>
-        <div style="display: grid;grid-template-columns: 1fr 1fr">
-          <p style="font-weight: 700">Invoice Date:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">{{ detail.invoice_date }}</p>
-        </div>
-        <div style="display: grid;grid-template-columns: 1fr 1fr">
-          <p style="font-weight: 700">Payment Type:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">{{ detail.payment_type }}</p>
-        </div>
-        <div style="display: grid;grid-template-columns: 1fr 1fr">
-          <p style="font-weight: 700">Total Bill:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">Rs. {{ detail.amount }}</p>
-        </div>
-        <div style="display: grid;grid-template-columns: 1fr 1fr">
-          <p style="font-weight: 700">Total Paid:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">
-            Rs. {{ detail.amount - detail.balance_due }}
-          </p>
-        </div>
-        <div style="display: grid;grid-template-columns: 1fr 1fr">
-          <p style="font-weight: 700">Total Balance:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">
-            Rs. {{ detail.balance_due ? detail.balance_due : '0.0' }}
-          </p>
-        </div>
-        <p style="font-weight: 700">Sale Order Items:`</p>
-        <v-data-table
-          v-if="detailItems"
-          :items="detailItems"
-          :headers="detailColumns"
-          disable-pagination
-          hide-default-footer
-        >
-          <template v-slot:item.total="{ item }">
-            <p style="margin: 0">
-              Rs. {{ item.qty * item.product.sale_price }}
-            </p>
-          </template>
-        </v-data-table>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="showError" width="70%">
-      <v-card>
-        <v-card-title>Error: {{ error }}</v-card-title>
-      </v-card>
-    </v-dialog>
   </div>
 </template>
 
@@ -275,7 +133,7 @@ import moment from 'moment'
 import { required } from '@/common/lib/validator'
 
 export default {
-  name: 'SaleOrder',
+  name: 'SaleReport',
   data: () => {
     return {
       error: null,
@@ -314,8 +172,7 @@ export default {
         { text: 'Discount', value: 'discount' },
         { text: 'Balance Due', value: 'balance_due' },
         { text: 'Status', value: 'status' },
-        { text: 'Delivery Status', value: 'delivery_status' },
-        { text: '', value: 'actions', sortable: false }
+        { text: 'Delivery Status', value: 'delivery_status' }
       ],
       detailColumns: [
         { text: 'Name', value: 'product.name' },
@@ -328,13 +185,6 @@ export default {
   computed: {
     total() {
       return this.unpaid + this.paid
-    },
-    filteredSaleOrders() {
-      return this.data.filter((d) => {
-        return Object.keys(this.filters).every((f) => {
-          return this.filters[f].length < 1 || this.filters[f].includes(d[f])
-        })
-      })
     }
   },
   mounted() {
@@ -374,57 +224,6 @@ export default {
       this.paid = response.paid
       this.unpaid = response.unpaid
     },
-    handleCreateEvent() {
-      this.$router.push('/sale/saleOrder/add')
-    },
-    handleUpdateEvent(item) {
-      this.$router.push('/sale/saleOrder/edit/' + item.id)
-    },
-    async removeItem(item) {
-      if (confirm('Are you sure?')) {
-        const response = await this.$axios.$delete(
-          '/saleOrder/delete/' + item.id
-        )
-        if (response.error) {
-          this.showError = true
-          this.error = response.error
-        } else {
-          await this.getData()
-          await this.getSummary()
-        }
-      }
-    },
-    async markAsPaid(item) {
-      if (confirm('Are you sure?')) {
-        const response = await this.$axios.$get('/saleOrder/paid/' + item.id)
-        if (response.error) {
-          this.showError = true
-          this.error = response.error
-        } else {
-          this.showDetail = false
-          await this.getData()
-          await this.getSummary()
-        }
-      }
-    },
-    async markAsComplete(item) {
-      if (confirm('Are you sure?')) {
-        const response = await this.$axios.$get(
-          '/saleOrder/complete/' + item.id
-        )
-        if (response.error) {
-          this.showError = true
-          this.error = response.error
-        } else {
-          this.showDetail = false
-          await this.getData()
-          await this.getSummary()
-        }
-      }
-    },
-    getPDF(item) {
-      window.open('http://192.168.100.23:8000/api/saleOrder/pdf/' + item.id)
-    },
     async getData() {
       let id = 4
       if (this.type === 'All') {
@@ -457,21 +256,18 @@ export default {
         } else {
           this.data = await this.$axios.$post('saleOrder/filter/-1', this.dates)
         }
-        let response
-        if (this.$auth.user.type === 'Sub Admin') {
-          response = await this.$axios.$post(
-            '/saleOrder/summary/' + this.$auth.user.branch_id,
-            this.dates
-          )
-        } else {
-          response = await this.$axios.$post(
-            '/saleOrder/summary/-1',
-            this.dates
-          )
-        }
-        this.paid = response.paid
-        this.unpaid = response.unpaid
       }
+      let response
+      if (this.$auth.user.type === 'Sub Admin') {
+        response = await this.$axios.$post(
+          '/saleOrder/summary/' + this.$auth.user.branch_id,
+          this.dates
+        )
+      } else {
+        response = await this.$axios.$post('/saleOrder/summary/-1', this.dates)
+      }
+      this.paid = response.paid
+      this.unpaid = response.unpaid
     },
     date: (date) => moment(date).format('MM/DD/YY'),
     getStatus(total, due) {
@@ -487,6 +283,76 @@ export default {
         }
       } else {
         return 'Paid'
+      }
+    },
+    printReport() {
+      let id = 4
+      if (this.type === 'All') {
+        id = 4
+      } else if (this.type === 'This Month') {
+        id = 0
+      } else if (this.type === 'Last Month') {
+        id = 1
+      } else if (this.type === 'This Quarter') {
+        id = 2
+      } else if (this.type === 'This Year') {
+        id = 3
+      } else if (this.type === 'Custom') {
+        id = 5
+      }
+      console.log(id)
+      if (this.$auth.user.type === 'Sub Admin') {
+        if (id === 5) {
+          if (this.dates.from && this.dates.to) {
+            window.open(
+              this.$axios.defaults.baseURL +
+                'saleOrder/printReport/' +
+                id +
+                '/' +
+                this.$auth.user.branch.id +
+                '?from=' +
+                this.dates.from +
+                '$to=' +
+                this.dates.to
+            )
+          } else {
+            window.open(
+              this.$axios.defaults.baseURL +
+                'saleOrder/printReport/' +
+                id +
+                '/' +
+                this.$auth.user.branch.id
+            )
+          }
+        } else {
+          window.open(
+            this.$axios.defaults.baseURL +
+              'saleOrder/printReport/' +
+              id +
+              '/' +
+              this.$auth.user.branch.id
+          )
+        }
+      } else if (id === 5) {
+        if (this.dates.from && this.dates.to) {
+          window.open(
+            this.$axios.defaults.baseURL +
+              'saleOrder/printReport/' +
+              id +
+              '/-1?from=' +
+              this.dates.from +
+              '&to=' +
+              this.dates.to
+          )
+        } else {
+          window.open(
+            this.$axios.defaults.baseURL + 'saleOrder/printReport/' + id + '/-1'
+          )
+        }
+      } else {
+        window.open(
+          this.$axios.defaults.baseURL + 'saleOrder/printReport/' + id + '/-1'
+        )
       }
     }
   }

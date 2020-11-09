@@ -122,7 +122,7 @@
           class="drawer-menu-item"
         >
           <v-list-item-action>
-            <v-icon color="#ce862a">mdi-shopping</v-icon>
+            <v-icon color="#ce862a">mdi-tag-multiple</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title class="drawer-menu-item-title"
@@ -292,12 +292,35 @@
             </v-list-item-content>
           </v-list-item>
           <v-list-item
+            to="/report/sale"
             active-class="drawer-menu-item-active"
             style="padding-left: 20px"
           >
             <v-list-item-content>
               <v-list-item-title class="drawer-menu-item-title"
-                >Order Report</v-list-item-title
+                >Sale Report</v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item
+            to="/report/purchase"
+            active-class="drawer-menu-item-active"
+            style="padding-left: 20px"
+          >
+            <v-list-item-content>
+              <v-list-item-title class="drawer-menu-item-title"
+                >Purchase Report</v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item
+            to="/report/profit-loss"
+            active-class="drawer-menu-item-active"
+            style="padding-left: 20px"
+          >
+            <v-list-item-content>
+              <v-list-item-title class="drawer-menu-item-title"
+                >Profit & Loss Report</v-list-item-title
               >
             </v-list-item-content>
           </v-list-item>

@@ -7,14 +7,14 @@
         style="display: flex;justify-content: center;align-items: center;"
       >
         <img
-          alt="logo"
           src="../../assets/images/ToppersPakistanLogo.png"
+          alt="logo"
           width="130px"
           height="130px"
         />
       </v-container>
       <v-container style="display: flex;justify-content: center;padding: 0">
-        <v-card-title>Reset Password</v-card-title>
+        <v-card-title>Forgot Password</v-card-title>
       </v-container>
       <v-progress-linear
         v-if="loading"
@@ -22,32 +22,21 @@
         color="#313F53"
         class="mb-0"
       ></v-progress-linear>
-      <v-form v-if="!loading" ref="form">
+      <MailSent v-if="mail" />
+      <v-form v-if="!loading && !mail" ref="form">
         <ul v-if="errors.length" style="color: red;margin-bottom: 15px">
           <li v-for="(error, i) of errors" :key="i">
             {{ error }}
           </li>
         </ul>
         <v-text-field
-          v-model="data.password"
+          v-model="data.email"
           color="#313F53"
           outlined
           style="color: #313F53"
-          :rules="[required, lengthValidator]"
-          type="password"
-          label="New Password"
+          :rules="[required, emailValidator]"
+          label="Email"
           dense
-        ></v-text-field>
-        <v-text-field
-          v-model="confirmPassword"
-          color="#313F53"
-          type="password"
-          outlined
-          style="color: #313F53"
-          :rules="[required, lengthValidator]"
-          label="Confirm Password"
-          dense
-          @keypress.enter="reset"
         ></v-text-field>
         <nuxt-link to="/auth/login" style="text-decoration: none">
           <p style="font-size: 12px;text-align: right;color:#313f53;">
@@ -57,7 +46,7 @@
         <v-btn
           width="100%"
           color="#FF974D"
-          style="color:#494237"
+          style="color:#ffffff"
           large
           elevation="0"
           @click="reset"
@@ -70,49 +59,35 @@
 </template>
 
 <script>
-import { required, lengthValidator } from '@/common/lib/validator'
+import MailSent from '../../components/misc/mail-sent'
+import { emailValidator, required } from '@/common/lib/validator'
 
 export default {
-  name: 'ResetPassword',
+  components: { MailSent },
   layout(context) {
     return 'none'
   },
   auth: false,
-  props: {
-    getHash: {
-      type: String,
-      default: ''
-    }
-  },
   data: () => ({
+    mail: false,
     loading: false,
     errors: [],
-    confirmPassword: '',
     data: {
-      password: '',
-      hash: ''
+      email: ''
     }
   }),
-  mounted() {
-    this.data.hash = this.getHash
-  },
   methods: {
     required,
-    lengthValidator,
+    emailValidator,
     async reset() {
       if (this.$refs.form.validate()) {
         try {
           this.loading = true
           this.errors = []
           window.console.log(this.data)
-          if (this.data.password === this.confirmPassword) {
-            await this.$axios.post('persons/resetpassword', this.data)
-            window.localStorage.setItem('messageCheck', true)
-            await this.$router.push('/auth/login')
-          } else {
-            this.loading = false
-            this.errors.push('Could not confirm password.')
-          }
+          await this.$axios.post('auth/user/forgotpassword', this.data)
+          this.mail = true
+          this.loading = false
         } catch (err) {
           this.loading = false
           if (err.response) {

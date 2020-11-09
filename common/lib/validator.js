@@ -59,3 +59,7 @@ export function phoneValidator(value) {
 export function lengthValidator(value) {
   return value.length >= 8 || 'Enter at least 8 characters'
 }
+
+export function yearValidator(value) {
+  return value <= new Date().getFullYear() || 'Enter Valid Year'
+}

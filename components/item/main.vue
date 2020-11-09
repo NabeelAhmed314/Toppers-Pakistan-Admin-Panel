@@ -82,9 +82,10 @@ export default {
       this.branchId = item
       await this.getItems()
     },
-    updateItem(item) {
+    async updateItem(item) {
+      this.items = await this.$axios.$get('item/filter/' + this.branchId)
       this.item = item
-      this.getItemTransactions()
+      await this.getItemTransactions()
     }
   }
 }

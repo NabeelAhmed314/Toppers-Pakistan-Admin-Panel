@@ -1,6 +1,6 @@
 <template>
   <div class="entity-detail-main">
-    <div v-if="item.stock" class="entity-detail-item">
+    <div v-if="item.stock !== null" class="entity-detail-item">
       <div style="display: flex;margin:15px 0">
         <p style="margin: 0">{{ item.name }}</p>
         <v-spacer />

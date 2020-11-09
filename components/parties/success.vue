@@ -14,8 +14,11 @@
         <p style="margin-top: 20px;text-align: center">
           Successfully changed password!
         </p>
-        <p style="text-align: center">
+        <p v-if="!admin" style="text-align: center">
           Head to our app to log in to your account.
+        </p>
+        <p v-else style="text-align: center">
+          Login to your account <nuxt-link to="/">here</nuxt-link> .
         </p>
       </v-container>
     </v-card></v-container
@@ -24,7 +27,13 @@
 
 <script>
 export default {
-  name: 'ChangePasswordSuccess'
+  name: 'ChangePasswordSuccess',
+  props: {
+    admin: {
+      type: Boolean,
+      default: false
+    }
+  }
 }
 </script>
 

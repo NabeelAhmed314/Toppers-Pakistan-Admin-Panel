@@ -11,6 +11,7 @@
           ? '/notification/update/' + notification.id
           : '/notification/new'
       "
+      @response="sendToMobile"
     >
       <template v-slot:header>
         <v-row>
@@ -97,6 +98,27 @@ export default {
       }
       formData.forEach((item) => window.console.log(item))
       return formData
+    },
+    async sendToMobile(item) {
+      console.log('send to mobile')
+      console.log(item)
+      const response = await fetch('https://fcm.googleapis.com/fcm/send', {
+        // mode: 'no-cors',
+        method: 'POST',
+        body: JSON.stringify({
+          notification: {
+            title: item.data.title,
+            body: item.data.message
+          },
+          to: '/topics/notifications'
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization:
+            'key=AAAA29Gw0So:APA91bGzq1zqXyrV_zjhLB4cyHcX3DKB9kutmHBB44XZsQw4Gn7p_5QwzNIqPcXV_OJSXMY3Ps5JG-9lPtBTJgqysxke3ualQCViZcjoXTY3h3Vj7tjN5jbxMJf-pWv6_R4CdB9Qz-UG'
+        }
+      })
+      console.log(response)
     }
   }
 }

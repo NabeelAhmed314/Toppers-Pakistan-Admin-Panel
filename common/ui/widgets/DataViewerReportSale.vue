@@ -1,7 +1,13 @@
 <template>
   <v-card class="data-viewer" elevation="8">
     <v-card-title class="data-viewer__title">
-      <v-btn aria-hidden="true" v-if="back" icon style="margin-right: 50px" @click="returnBack">
+      <v-btn
+        v-if="back"
+        aria-hidden="true"
+        icon
+        style="margin-right: 50px"
+        @click="returnBack"
+      >
         <v-icon>mdi-keyboard-backspace</v-icon>
       </v-btn>
       <span>{{ title }}</span>
@@ -100,7 +106,7 @@
 
 <script>
 import moment from 'moment'
-import { yearValidator, required } from '../../utils/validators'
+import { yearValidator, required } from '../../lib/validator'
 export default {
   name: 'DataViewerReportSale',
   props: {

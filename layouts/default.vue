@@ -403,7 +403,7 @@
       >
         <v-icon>mdi-menu</v-icon>
       </v-btn>
-      <nuxt-link to="/">
+      <nuxt-link to="/" style="margin-right: 30px">
         <img
           style="margin: auto 0;max-width: 40px;max-height: 40px"
           alt="main-logo"
@@ -411,6 +411,12 @@
           src="~/assets/images/ToppersPakistanLogo.png"
         />
       </nuxt-link>
+      <h3 v-if="$auth.user.branch" style="text-align: center;color: #bc282b">
+        Welcome to {{ $auth.user.branch.name }}
+      </h3>
+      <h3 v-else style="text-align: center;color: #bc282b">
+        Welcome Admin
+      </h3>
       <v-spacer />
       <div v-if="$auth.user.type === 'Main Admin'" style="width: 250px">
         <v-text-field

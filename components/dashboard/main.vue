@@ -1,11 +1,5 @@
 <template>
   <div>
-    <h1 v-if="$auth.user.branch" style="text-align: center;color: #bc282b">
-      {{ $auth.user.branch.name }}
-    </h1>
-    <h1 v-else style="text-align: center;color: #bc282b">
-      Main Admin
-    </h1>
     <div class="my-dashboard-main">
       <nuxt-link to="/sale/saleOrder" style="text-decoration: none">
         <div>

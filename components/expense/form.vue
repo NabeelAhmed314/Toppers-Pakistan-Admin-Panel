@@ -25,7 +25,7 @@
       </template>
       <div class="span-2">
         <v-card style="padding:20px;margin-bottom:20px">
-          <v-card-title>Product Information</v-card-title>
+          <v-card-title>Expense Information</v-card-title>
           <v-text-field
             v-model="expense.title"
             class="my-text"

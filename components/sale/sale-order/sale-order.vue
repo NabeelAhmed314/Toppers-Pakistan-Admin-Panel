@@ -423,7 +423,7 @@ export default {
       }
     },
     getPDF(item) {
-      window.open('http://192.168.100.23:8000/api/saleOrder/pdf/' + item.id)
+      window.open(this.$axios.defaults.baseURL + 'saleOrder/pdf/' + item.id)
     },
     async getData() {
       let id = 4

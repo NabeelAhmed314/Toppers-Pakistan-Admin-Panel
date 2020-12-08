@@ -65,6 +65,16 @@
             :value="branch.address"
             dense
           ></v-text-field>
+          <v-text-field
+            v-model="branch.delivery"
+            class="textfieldStyle"
+            :rules="[priceWZ]"
+            outlined
+            type="number"
+            label="Delivery Charges"
+            :value="branch.delivery"
+            dense
+          ></v-text-field>
           <p class="textfieldStyle">Media</p>
           <p v-if="error" class="textfieldStyle" style="color:red">
             {{ error }}
@@ -90,7 +100,8 @@ import { Branch } from '@/models/branch'
 import {
   emailValidator,
   required,
-  phoneValidator
+  phoneValidator,
+  priceWZ
 } from '@/common/lib/validator'
 export default {
   name: 'BranchForm',
@@ -122,6 +133,7 @@ export default {
     emailValidator,
     required,
     phoneValidator,
+    priceWZ,
     returnBack() {
       this.$router.back()
     },

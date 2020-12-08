@@ -4,7 +4,7 @@ export class Item {
   // eslint-disable-next-line camelcase
   subCategory_id = undefined
   // eslint-disable-next-line camelcase
-  branch_id = undefined
+  branch_id = 0
   // eslint-disable-next-line camelcase
   unit_id = undefined
   stock = undefined

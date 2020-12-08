@@ -69,7 +69,6 @@
             :readonly="isUpdate"
             :value="item.branch_id"
             :items="branches"
-            :rules="[required]"
             item-text="name"
             outlined
             item-value="id"
@@ -486,6 +485,7 @@ export default {
         myObj.allowVariant = false
         myObj.product = this.item
       }
+      console.log(myObj)
       return myObj
     },
     async sendImages(item) {

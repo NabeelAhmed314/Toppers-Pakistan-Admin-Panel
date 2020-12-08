@@ -63,6 +63,7 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
+    // baseURL: 'http://http://192.168.10.11:4000/api/'
     baseURL: 'https://api.toppers-mart.com/api/'
     // baseURL: 'http://192.168.100.23:8000/api/'
   },

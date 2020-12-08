@@ -4,4 +4,5 @@ export class Branch {
   email = undefined
   phone = undefined
   address = undefined
+  delivery = undefined
 }

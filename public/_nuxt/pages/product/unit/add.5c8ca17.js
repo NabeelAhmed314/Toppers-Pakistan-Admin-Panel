@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[50],{815:function(n,e,t){"use strict";t.r(e);var c={name:"Add",middleware:"isAdmin",components:{UnitForm:t(675).a}},o=t(51),component=Object(o.a)(c,(function(){var n=this.$createElement;return(this._self._c||n)("unit-form")}),[],!1,null,"21ba52cc",null);e.default=component.exports}}]);

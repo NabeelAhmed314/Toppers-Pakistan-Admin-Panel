@@ -10,9 +10,9 @@ export default {
       lang: 'en'
     },
     titleTemplate(titleChunk) {
-      return titleChunk ? `${titleChunk}` : 'Toppers Pakistan - Admin'
+      return titleChunk ? `${titleChunk}` : 'Apna Pos'
     },
-    title: 'Toppers Pakistan - Admin',
+    title: 'Apna Pos',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -21,7 +21,7 @@ export default {
         name: 'description',
         content:
           process.env.npm_package_description ||
-          'Toppers Pakistan is an online shopping platform based in Pakistan.'
+          'Apna Pos is an online shopping platform based in Pakistan.'
       }
     ],
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
@@ -63,8 +63,9 @@ export default {
    ** See https://axios.nuxtjs.org/options
    */
   axios: {
-    // baseURL: 'http://http://192.168.10.11:4000/api/'
-    baseURL: 'https://api.toppers-mart.com/api/'
+    // baseURL: 'http://192.168.18.2:8000/api/'
+    baseURL: 'https://api.apnapos.pk/api/'
+    // baseURL: 'https://api.toppers-mart.com/api/'
     // baseURL: 'http://192.168.100.23:8000/api/'
   },
   auth: {

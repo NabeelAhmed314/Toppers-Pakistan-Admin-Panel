@@ -47,7 +47,9 @@ export default {
     branchManagers: [],
     branchManagerHeader: [
       { text: 'Name', value: 'name' },
-      { text: 'Email', value: 'email' }
+      { text: 'Email', value: 'email' },
+      { text: 'Type', value: 'type' },
+      { text: '', value: 'actions' }
     ]
   }),
   async mounted() {

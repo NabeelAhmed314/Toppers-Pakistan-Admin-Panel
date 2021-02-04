@@ -7,7 +7,7 @@
         style="display: flex;justify-content: center;align-items: center;"
       >
         <img
-          src="../../assets/images/ToppersPakistanLogo.png"
+          src="../../assets/images/ApnaPos.png"
           alt="logo"
           width="130px"
           height="130px"
@@ -45,7 +45,7 @@
         >
         <v-btn
           width="100%"
-          color="#FF974D"
+          color="#4f6318"
           style="color:#ffffff"
           large
           elevation="0"

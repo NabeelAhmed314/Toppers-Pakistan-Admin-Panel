@@ -1,19 +1,22 @@
 <template>
   <v-app dark>
-    <!--    <v-navigation-drawer app :mini-variant="drawer" color="#000">-->
-    <v-navigation-drawer v-model="drawer" expand-on-hover app color="#000">
-      <!--    <v-navigation-drawer v-model="drawer" app color="#000">-->
-      <v-list dense>
-        <v-list-item to="/settings/account" two-line style="padding-left: 10px">
+    <v-navigation-drawer v-model="drawer" app color="#212934">
+      <v-list dense style="padding: 0">
+        <v-list-item
+          to="/settings/account"
+          two-line
+          style="padding: 0 10px;height: 64px"
+        >
           <v-list-item-avatar>
             <img
               v-if="!$auth.user.image"
               alt="default-person"
-              src="~/assets/images/ToppersPakistanLogo.png"
+              style="object-fit: cover"
+              src="~/assets/images/ApnaPos.png"
             />
             <img
               v-else
-              style="object-fit: contain"
+              style="object-fit: cover"
               alt="main-person"
               :src="
                 $axios.defaults.baseURL.replace('api/', '') +
@@ -29,17 +32,23 @@
               $auth.user.name
             }}</v-list-item-title>
             <v-list-item-subtitle style="color:white">{{
-              $auth.user.type === 'Main Admin' ? 'Admin' : 'Branch Manager'
+              $auth.user.type === 'Main Admin'
+                ? 'Admin'
+                : $auth.user.type === 'Sub Admin'
+                ? 'Sub Admin'
+                : 'Branch Manager'
             }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
+        <v-divider style="border-color: #191f26;" />
+        <v-divider style="border-color: #e0e0e0;" />
         <v-list-item
           to="/"
           active-class="drawer-menu-item-active"
           class="drawer-menu-item"
         >
           <v-list-item-action>
-            <v-icon color="#ce862a">mdi-home</v-icon>
+            <v-icon color="#aaacb1">mdi-home</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title class="drawer-menu-item-title"
@@ -54,7 +63,7 @@
           class="drawer-menu-item"
         >
           <v-list-item-action>
-            <v-icon color="#ce862a">mdi-play-box</v-icon>
+            <v-icon color="#aaacb1">mdi-play-box</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title class="drawer-menu-item-title"
@@ -63,14 +72,17 @@
           </v-list-item-content>
         </v-list-item>
         <v-list-group
-          v-if="$auth.user.type === 'Main Admin'"
+          v-if="
+            $auth.user.type === 'Main Admin' ||
+              $auth.user.type === 'Branch Manager'
+          "
           active-class="drawer-menu-item-active"
           class="drawer-menu-item"
           no-action
         >
           <v-list-item slot="activator" style="padding: 0">
             <v-list-item-action>
-              <v-icon color="#ce862a">mdi-account-multiple</v-icon>
+              <v-icon color="#aaacb1">mdi-account-multiple</v-icon>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title class="drawer-menu-item-title"
@@ -108,7 +120,7 @@
           class="drawer-menu-item"
         >
           <v-list-item-action>
-            <v-icon color="#ce862a">mdi-store</v-icon>
+            <v-icon color="#aaacb1">mdi-store</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title class="drawer-menu-item-title"
@@ -122,7 +134,7 @@
           class="drawer-menu-item"
         >
           <v-list-item-action>
-            <v-icon color="#ce862a">mdi-tag-multiple</v-icon>
+            <v-icon color="#aaacb1">mdi-tag-multiple</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title class="drawer-menu-item-title"
@@ -137,7 +149,7 @@
           class="drawer-menu-item"
         >
           <v-list-item-action>
-            <v-icon color="#ce862a">mdi-shopping</v-icon>
+            <v-icon color="#aaacb1">mdi-shopping</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title class="drawer-menu-item-title"
@@ -152,7 +164,7 @@
         >
           <v-list-item slot="activator" style="padding: 0">
             <v-list-item-action>
-              <v-icon color="#ce862a">mdi-clipboard</v-icon>
+              <v-icon color="#aaacb1">mdi-clipboard</v-icon>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title class="drawer-menu-item-title"
@@ -183,7 +195,10 @@
             </v-list-item-content>
           </v-list-item>
           <v-list-item
-            v-if="$auth.user.type === 'Main Admin'"
+            v-if="
+              $auth.user.type === 'Main Admin' ||
+                $auth.user.type === 'Branch Manager'
+            "
             active-class="drawer-menu-item-active"
             to="/sale/saleReturn"
             style="padding-left: 20px"
@@ -196,14 +211,17 @@
           </v-list-item>
         </v-list-group>
         <v-list-group
-          v-if="$auth.user.type === 'Main Admin'"
+          v-if="
+            $auth.user.type === 'Main Admin' ||
+              $auth.user.type === 'Branch Manager'
+          "
           active-class="drawer-menu-item-active"
           class="drawer-menu-item"
           no-action
         >
           <v-list-item slot="activator" style="padding: 0">
             <v-list-item-action>
-              <v-icon color="#ce862a">mdi-cart</v-icon>
+              <v-icon color="#aaacb1">mdi-cart</v-icon>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title class="drawer-menu-item-title"
@@ -246,13 +264,12 @@
           </v-list-item>
         </v-list-group>
         <v-list-item
-          v-if="$auth.user.type === 'Main Admin'"
           to="/expense"
           active-class="drawer-menu-item-active"
           class="drawer-menu-item"
         >
           <v-list-item-action>
-            <v-icon color="#ce862a">mdi-cash-usd</v-icon>
+            <v-icon color="#aaacb1">mdi-cash-usd</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title class="drawer-menu-item-title"
@@ -260,6 +277,8 @@
             >
           </v-list-item-content>
         </v-list-item>
+        <v-divider style="border-color: #191f26;" />
+        <v-divider style="border-color: #e0e0e0;" />
         <v-list-item
           v-if="$auth.user.type === 'Main Admin'"
           to="/notification"
@@ -267,7 +286,7 @@
           class="drawer-menu-item"
         >
           <v-list-item-action>
-            <v-icon color="#ce862a">mdi-bell</v-icon>
+            <v-icon color="#aaacb1">mdi-bell</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title class="drawer-menu-item-title"
@@ -276,14 +295,17 @@
           </v-list-item-content>
         </v-list-item>
         <v-list-group
-          v-if="$auth.user.type === 'Main Admin'"
+          v-if="
+            $auth.user.type === 'Main Admin' ||
+              $auth.user.type === 'Branch Manager'
+          "
           active-class="drawer-menu-item-active"
           class="drawer-menu-item"
           no-action
         >
           <v-list-item slot="activator" style="padding: 0">
             <v-list-item-action>
-              <v-icon color="#ce862a">mdi-file-chart</v-icon>
+              <v-icon color="#aaacb1">mdi-file-chart</v-icon>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title class="drawer-menu-item-title"
@@ -324,6 +346,28 @@
               >
             </v-list-item-content>
           </v-list-item>
+          <v-list-item
+            to="/report/dayClose"
+            active-class="drawer-menu-item-active"
+            style="padding-left: 20px"
+          >
+            <v-list-item-content>
+              <v-list-item-title class="drawer-menu-item-title"
+                >Day Close</v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
+          <v-list-item
+            to="/report/monthClose"
+            active-class="drawer-menu-item-active"
+            style="padding-left: 20px"
+          >
+            <v-list-item-content>
+              <v-list-item-title class="drawer-menu-item-title"
+                >Month Close</v-list-item-title
+              >
+            </v-list-item-content>
+          </v-list-item>
         </v-list-group>
         <v-list-group
           active-class="drawer-menu-item-active"
@@ -332,7 +376,7 @@
         >
           <v-list-item slot="activator" style="padding: 0">
             <v-list-item-action>
-              <v-icon color="#ce862a">mdi-cog</v-icon>
+              <v-icon color="#aaacb1">mdi-cog</v-icon>
             </v-list-item-action>
             <v-list-item-content>
               <v-list-item-title class="drawer-menu-item-title"
@@ -363,6 +407,8 @@
             </v-list-item-content>
           </v-list-item>
         </v-list-group>
+        <v-divider style="border-color: #191f26;" />
+        <v-divider style="border-color: #e0e0e0;" />
         <v-list-item
           v-if="$auth.user.type === 'Main Admin'"
           to="/auth/signup"
@@ -370,7 +416,7 @@
           class="drawer-menu-item"
         >
           <v-list-item-action>
-            <v-icon color="#ce862a">mdi-account-plus</v-icon>
+            <v-icon color="#aaacb1">mdi-account-plus</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title class="drawer-menu-item-title"
@@ -384,7 +430,7 @@
           @click="logout"
         >
           <v-list-item-action>
-            <v-icon color="#ce862a">mdi-logout</v-icon>
+            <v-icon color="#aaacb1">mdi-logout</v-icon>
           </v-list-item-action>
           <v-list-item-content>
             <v-list-item-title class="drawer-menu-item-title"
@@ -394,42 +440,54 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar dense color="white" fixed app>
+    <v-app-bar color="#fff" elevation="1" fixed app>
       <v-btn
-        style="color: #bc282b;margin-right: 30px;text-align: center"
+        style="color: #B5D75A;margin-right: 30px;text-align: center"
         icon
         aria-hidden="true"
         @click.stop="drawer = !drawer"
       >
         <v-icon>mdi-menu</v-icon>
       </v-btn>
-      <nuxt-link to="/" style="margin-right: 30px">
-        <img
-          style="margin: auto 0;max-width: 40px;max-height: 40px"
-          alt="main-logo"
-          class="mx-2"
-          src="~/assets/images/ToppersPakistanLogo.png"
-        />
+      <nuxt-link to="/" style="margin-right: 30px;text-decoration: none">
+        <v-icon color="#b5d75a">mdi-home</v-icon>
       </nuxt-link>
-      <h3 v-if="$auth.user.branch" style="text-align: center;color: #bc282b">
+      <h3
+        v-if="$auth.user.branch"
+        style="text-align: center;color: #B5D75A;font-size: 32px"
+      >
         Welcome to {{ $auth.user.branch.name }}
       </h3>
-      <h3 v-else style="text-align: center;color: #bc282b">
+      <h3 v-else style="text-align: center;color: #B5D75A;font-size: 32px">
         Welcome Admin
       </h3>
       <v-spacer />
-      <div v-if="$auth.user.type === 'Main Admin'" style="width: 250px">
-        <v-text-field
-          aria-hidden="true"
-          placeholder="Search"
-          prepend-inner-icon="mdi-magnify"
-          outlined
-          hide-details
-          dense
-          clearable
-        >
-        </v-text-field>
-      </div>
+      <v-btn
+        style="margin: 0 10px;color:white;"
+        rounded
+        color="#e35959"
+        large
+        primary
+        to="/sale/saleOrder/add"
+        ><v-icon>mdi-plus-circle</v-icon> Add Sale</v-btn
+      >
+      <v-btn
+        style="margin: 0 10px;color:white;"
+        rounded
+        color="#3cb9aa"
+        large
+        primary
+        to="/purchase/purchaseOrder/add"
+        ><v-icon>mdi-plus-circle</v-icon> Add Purchase</v-btn
+      >
+      <a
+        href="https://wa.me/923001300533"
+        target="_blank"
+        style="margin-right: 30px;text-align: center;text-decoration: none"
+        aria-hidden="true"
+      >
+        <v-icon color="#b5d75a">mdi-whatsapp</v-icon>
+      </a>
     </v-app-bar>
     <v-main app>
       <nuxt />
@@ -457,34 +515,39 @@ export default {
 
 <style>
 .drawer-menu-item {
-  color: white;
+  color: #191f26;
   border: none;
 }
 .drawer-menu-item .v-icon {
-  color: white;
+  color: #aaacb1;
 }
 .drawer-menu-item-title {
-  color: white;
+  color: #aaacb1;
 }
 .drawer-menu-item:hover {
-  background-color: white;
+  background-color: #191f26;
+  border-left: 1px solid red;
 }
 .drawer-menu-item:active {
-  background-color: white;
+  background-color: #191f26;
 }
 .drawer-menu-item:hover .v-icon {
-  color: #313f53;
+  color: #fff !important;
+}
+.drawer-menu-item-active .v-icon {
+  color: #fff !important;
 }
 .drawer-menu-item:hover .drawer-menu-item-title {
-  color: #313f53;
+  color: #fff;
 }
 .drawer-menu-item-active {
-  background-color: white;
+  background-color: #191f26;
+  border-left: 1px solid red;
 }
 /*.drawer-menu-item-active .v-icon {*/
 /*  color: #313f53;*/
 /*}*/
 .drawer-menu-item-active .drawer-menu-item-title {
-  color: #313f53;
+  color: #fff;
 }
 </style>

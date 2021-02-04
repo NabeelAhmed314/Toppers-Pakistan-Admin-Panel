@@ -1,5 +1,33 @@
 <template>
   <div style="padding: 25px">
+    <div>
+      <div class="my-range-picker">
+        <v-form ref="form" class="my-range-picker-date">
+          <v-text-field
+            v-model="dates.from"
+            :rules="[required]"
+            dense
+            type="date"
+            aria-hidden="true"
+            outlined
+            label="From"
+            @change="getCustom"
+          />
+          <v-text-field
+            v-model="dates.to"
+            :rules="[required]"
+            aria-hidden="true"
+            dense
+            type="date"
+            outlined
+            label="To"
+            @change="getCustom"
+          >
+            To
+          </v-text-field>
+        </v-form>
+      </div>
+    </div>
     <div style="width: 100%">
       <div style="display: flex">
         <h1>Profit & Loss Report</h1>
@@ -29,11 +57,11 @@
           </tr>
           <tr>
             <td>Credit Note(-)</td>
-            <td style="color: #bc282b">Rs. {{ creditNote }}</td>
+            <td style="color: #116199">Rs. {{ creditNote }}</td>
           </tr>
           <tr>
             <td>Purchase(-)</td>
-            <td style="color: #bc282b">Rs. {{ purchase }}</td>
+            <td style="color: #116199">Rs. {{ purchase }}</td>
           </tr>
           <tr>
             <td>Debit Note(+)</td>
@@ -41,7 +69,7 @@
           </tr>
           <tr>
             <td>Opening Stock(-)</td>
-            <td style="color: #bc282b">Rs. {{ opening }}</td>
+            <td style="color: #116199">Rs. {{ opening }}</td>
           </tr>
           <tr>
             <td>Closing Stock(+)</td>
@@ -61,7 +89,7 @@
           </tr>
           <tr>
             <td>Expenses(-)</td>
-            <td style="color: #bc282b">Rs. {{ expense }}</td>
+            <td style="color: #116199">Rs. {{ expense }}</td>
           </tr>
           <tr>
             <td
@@ -123,7 +151,10 @@ export default {
     required,
     async getReport() {
       let response
-      if (this.$auth.user.type === 'Sub Admin') {
+      if (
+        this.$auth.user.type === 'Sub Admin' ||
+        this.$auth.user.type === 'Branch Manager'
+      ) {
         response = await this.$axios.$get(
           'profitLoss/' + this.$auth.user.branch_id
         )
@@ -140,7 +171,10 @@ export default {
       this.expense = response.expense
     },
     printReport() {
-      if (this.$auth.user.type === 'Sub Admin') {
+      if (
+        this.$auth.user.type === 'Sub Admin' ||
+        this.$auth.user.type === 'Branch Manager'
+      ) {
         window.open(
           this.$axios.defaults.baseURL +
             'profitLoss/print/' +
@@ -148,6 +182,31 @@ export default {
         )
       } else {
         window.open(this.$axios.defaults.baseURL + 'profitLoss/print/-1')
+      }
+    },
+    // eslint-disable-next-line require-await
+    async getCustom() {
+      console.log(this.dates)
+      let response
+      if (this.$refs.form.validate()) {
+        if (
+          this.$auth.user.type === 'Sub Admin' ||
+          this.$auth.user.type === 'Branch Manager'
+        ) {
+          response = await this.$axios.$post(
+            'profitLossRange/' + this.$auth.user.branch_id,
+            this.dates
+          )
+        } else {
+          response = await this.$axios.$post('profitLossRange/-1', this.dates)
+        }
+        this.sale = response.sale
+        this.creditNote = response.creditNote
+        this.purchase = response.purchase
+        this.debitNote = response.debitNote
+        this.opening = response.openingStock
+        this.closing = response.closingStock
+        this.expense = response.expense
       }
     }
   }

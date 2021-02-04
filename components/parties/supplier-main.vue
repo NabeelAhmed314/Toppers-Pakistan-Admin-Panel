@@ -95,7 +95,13 @@ export default {
       this.getSupplierTransactions()
     },
     async getSuppliers() {
-      this.suppliers = await this.$axios.$get('/supplier')
+      if (this.$auth.user.type === 'Main Admin') {
+        this.suppliers = await this.$axios.$get('/supplier/branch/0')
+      } else {
+        this.suppliers = await this.$axios.$get(
+          '/supplier/branch/' + this.$auth.user.branch_id
+        )
+      }
       this.getSupplier()
     }
   }

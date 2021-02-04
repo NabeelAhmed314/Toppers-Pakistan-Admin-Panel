@@ -11,7 +11,7 @@
 import PartyForm from '@/components/parties/form'
 export default {
   name: 'Id',
-  middleware: 'isAdmin',
+  middleware: 'isAdminOrManager',
   components: { PartyForm },
   async asyncData({ $axios, route }) {
     return {

@@ -201,7 +201,7 @@ export default {
   height: calc(70% - 10px);
 }
 .entity-value {
-  color: #bc282b;
+  color: #116199;
 }
 .negative {
   color: red;

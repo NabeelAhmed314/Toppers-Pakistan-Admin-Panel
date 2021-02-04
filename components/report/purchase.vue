@@ -164,7 +164,7 @@ export default {
       dataColumns: [
         { text: 'Date', value: 'invoice_date' },
         { text: 'Invoice No.', value: 'invoice_id' },
-        { text: 'Customer Name', value: 'customer.name' },
+        { text: 'Supplier Name', value: 'supplier.name' },
         { text: 'Branch', value: 'branch.name' },
         { text: 'Origin', value: 'origin' },
         { text: 'Payment Type', value: 'payment_type' },
@@ -214,7 +214,10 @@ export default {
         id = 3
       }
       let response
-      if (this.$auth.user.type === 'Sub Admin') {
+      if (
+        this.$auth.user.type === 'Sub Admin' ||
+        this.$auth.user.type === 'Branch Manager'
+      ) {
         response = await this.$axios.$get(
           '/purchaseOrder/summary/' + id + '/' + this.$auth.user.branch_id
         )
@@ -239,7 +242,10 @@ export default {
       } else if (this.type === 'This Year') {
         id = 3
       }
-      if (this.$auth.user.type === 'Sub Admin') {
+      if (
+        this.$auth.user.type === 'Sub Admin' ||
+        this.$auth.user.type === 'Branch Manager'
+      ) {
         this.data = await this.$axios.$get(
           'purchaseOrder/filter/' + id + '/' + this.$auth.user.branch_id
         )
@@ -250,7 +256,10 @@ export default {
     },
     async getCustom() {
       if (this.$refs.form.validate()) {
-        if (this.$auth.user.type === 'Sub Admin') {
+        if (
+          this.$auth.user.type === 'Sub Admin' ||
+          this.$auth.user.type === 'Branch Manager'
+        ) {
           this.data = await this.$axios.$post(
             'purchaseOrder/filter/' + this.$auth.user.branch_id,
             this.dates
@@ -263,7 +272,10 @@ export default {
         }
       }
       let response
-      if (this.$auth.user.type === 'Sub Admin') {
+      if (
+        this.$auth.user.type === 'Sub Admin' ||
+        this.$auth.user.type === 'Branch Manager'
+      ) {
         response = await this.$axios.$post(
           '/purchaseOrder/summary/' + this.$auth.user.branch_id,
           this.dates
@@ -309,7 +321,10 @@ export default {
         id = 5
       }
       console.log(id)
-      if (this.$auth.user.type === 'Sub Admin') {
+      if (
+        this.$auth.user.type === 'Sub Admin' ||
+        this.$auth.user.type === 'Branch Manager'
+      ) {
         if (id === 5) {
           if (this.dates.from && this.dates.to) {
             window.open(

@@ -15,21 +15,6 @@
         <div class="sale-order-customer-form">
           <div class="sale-order-customer-name">
             <v-autocomplete
-              v-model="purchaseReturn.supplier_id"
-              outlined
-              dense
-              flat
-              :rules="[required]"
-              label="Supplier *"
-              :items="suppliers"
-              item-text="name"
-              persistent-hint
-              :item-value="(item) => item.id"
-              :readonly="isUpdate"
-              @change="getSaleOrders"
-            >
-            </v-autocomplete>
-            <v-autocomplete
               v-if="!isUpdate"
               v-model="purchaseReturn.purchase_order_id"
               outlined
@@ -45,15 +30,6 @@
               :readonly="isUpdate"
               @change="(item) => showOrderDetail(item)"
             >
-              <template v-slot:no-data>
-                <p style="margin: 0;text-align: center">
-                  {{
-                    purchaseReturn.supplier_id
-                      ? 'No Orders Found'
-                      : 'Please Select Customer First'
-                  }}
-                </p>
-              </template>
             </v-autocomplete>
             <div v-if="showDetail">
               <p>
@@ -146,6 +122,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { required } from '@/common/lib/validator'
 import SimpleForm from '@/common/ui/widgets/SimpleForm'
 import { Return } from '@/models/return'
@@ -182,7 +159,7 @@ export default {
     }
   },
   mounted() {
-    this.getCustomers()
+    this.getSaleOrders()
     if (!this.isUpdate) {
       this.getReceiptId()
     } else {
@@ -205,26 +182,31 @@ export default {
       }
     },
     async getCustomers() {
-      this.suppliers = await this.$axios.$get('supplier')
+      if (this.$auth.user.type === 'Main Admin') {
+        this.suppliers = await this.$axios.$get('/supplier/branch/0')
+      } else {
+        this.suppliers = await this.$axios.$get(
+          '/supplier/branch/' + this.$auth.user.branch_id
+        )
+      }
     },
     async getReceiptId() {
       this.purchaseReturn.invoice_id = await this.$axios.$get(
         '/purchaseReturn/getInvoice'
       )
+      this.purchaseReturn.invoice_date = moment().format('YYYY-MM-DD')
     },
     async getSaleOrders() {
       this.showDetail = false
-      if (this.$auth.user.type === 'Sub Admin') {
+      if (
+        this.$auth.user.type === 'Sub Admin' ||
+        this.$auth.user.type === 'Branch Manager'
+      ) {
         this.orders = await this.$axios.$get(
-          'purchaseOrder/supplier/' +
-            this.purchaseReturn.supplier_id +
-            '/' +
-            this.$auth.user.branch_id
+          'purchaseOrder/branch/' + this.$auth.user.branch_id
         )
       } else {
-        this.orders = await this.$axios.$get(
-          'purchaseOrder/supplier/' + this.purchaseReturn.supplier_id + '/-1'
-        )
+        this.orders = await this.$axios.$get('purchaseOrder/branch/-1')
       }
     },
     paid() {

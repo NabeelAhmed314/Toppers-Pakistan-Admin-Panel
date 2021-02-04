@@ -6,7 +6,7 @@
 import CustomerMain from '@/components/parties/customer-main'
 export default {
   name: 'Index',
-  middleware: 'isAdmin',
+  middleware: 'isAdminOrManager',
   components: { CustomerMain }
 }
 </script>

@@ -55,7 +55,7 @@
             label="Admin Type"
           />
           <v-autocomplete
-            v-if="signup.type === 'Sub Admin'"
+            v-if="signup.type === 'Sub Admin' || 'Branch Manager'"
             :rules="[required]"
             :items="branches"
             :value="signup.branchId"
@@ -98,8 +98,8 @@
           ></v-text-field>
           <v-btn
             width="100%"
-            color="#FF974D"
-            style="color:#494237"
+            color="#4f6318"
+            style="color:#fff"
             large
             elevation="0"
             @click="createUser"
@@ -124,7 +124,7 @@ export default {
   data: () => ({
     loading: false,
     success: false,
-    typeItems: ['Main Admin', 'Sub Admin'],
+    typeItems: ['Main Admin', 'Sub Admin', 'Branch Manager'],
     branches: [],
     errors: [],
     isLoading: false,

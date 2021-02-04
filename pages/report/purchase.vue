@@ -6,7 +6,7 @@
 import PurchaseReport from '@/components/report/purchase'
 export default {
   name: 'Purchase',
-  middleware: 'isAdmin',
+  middleware: 'isAdminOrManager',
   components: { PurchaseReport }
 }
 </script>

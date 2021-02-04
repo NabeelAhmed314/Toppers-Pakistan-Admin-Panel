@@ -18,12 +18,25 @@
               flat
               :rules="[required]"
               label="Supplier *"
+              :search-input.sync="searchSupplier"
               :items="suppliers"
               item-text="name"
               persistent-hint
               :item-value="(item) => item.id"
               :readonly="isUpdate"
+              @change="(item) => selectCustomer(item)"
             >
+              <template v-slot:no-data>
+                <span>
+                  <p
+                    style="margin: 0 5px 0 0;text-align: right;cursor: pointer"
+                    @click="openCustomerForm()"
+                  >
+                    <v-icon>mdi-plus-circle</v-icon>
+                    Add Party
+                  </p>
+                </span>
+              </template>
             </v-autocomplete>
             <v-autocomplete
               v-model="paymentOut.branch_id"
@@ -36,11 +49,35 @@
               item-text="name"
               persistent-hint
               :item-value="(item) => item.id"
-              :readonly="isUpdate || $auth.user.type === 'Sub Admin'"
+              :readonly="
+                isUpdate ||
+                  $auth.user.type === 'Sub Admin' ||
+                  this.$auth.user.type === 'Branch Manager'
+              "
+              @click="getPartialOrders"
+            >
+            </v-autocomplete>
+            <v-autocomplete
+              v-model="paymentOut.order"
+              outlined
+              dense
+              flat
+              label="Partial Order"
+              :items="partialOrders"
+              item-text="id"
+              :item-value="(item) => item"
             >
             </v-autocomplete>
           </div>
           <div class="sale-order-customer-address">
+            <div v-if="paymentOut.order">
+              <p>Total: {{ paymentOut.order.amount }}</p>
+              <p>
+                Paid :
+                {{ paymentOut.order.amount - paymentOut.order.balance_due }}
+              </p>
+              <p>Balance: {{ paymentOut.order.balance_due }}</p>
+            </div>
             <v-textarea
               v-model="paymentOut.description"
               label="Description"
@@ -74,10 +111,10 @@
             />
           </div>
           <div style="display: flex">
-            <label style="width: 50%">Received</label>
+            <label style="width: 50%">Paid</label>
             <v-text-field
               v-model="paymentOut.received"
-              :rules="[required]"
+              :rules="[required, paymentOut.order ? priceValidator : true]"
               style="margin: 0"
               dense
               outlined
@@ -87,14 +124,51 @@
         </div>
       </div>
     </SimpleForm>
+    <v-dialog v-model="addCustomer" width="850px">
+      <SimpleForm
+        title="Add Customer"
+        method="post"
+        :data="saveCustomer"
+        endpoint="supplier/store"
+        @response="selectCustomerAfterSave"
+      >
+        <div class="span-2">
+          <v-card style="padding: 20px;margin-bottom: 30px;box-shadow: none">
+            <v-text-field
+              v-model="customerSend.name"
+              :rules="[required]"
+              style="align-items: center !important;"
+              outlined
+              label="Supplier Name"
+              dense
+            ></v-text-field>
+            <v-text-field
+              v-model="customerSend.email"
+              style="align-items: center !important;"
+              outlined
+              label="Supplier Email"
+              dense
+            ></v-text-field>
+            <v-text-field
+              v-model="customerSend.phone"
+              style="align-items: center !important;"
+              outlined
+              type="number"
+              label="Supplier Phone"
+              dense
+            ></v-text-field>
+          </v-card>
+        </div>
+      </SimpleForm>
+    </v-dialog>
   </div>
 </template>
 
 <script>
+import moment from 'moment'
 import { required } from '@/common/lib/validator'
 import SimpleForm from '@/common/ui/widgets/SimpleForm'
 import { Payment } from '@/models/payment'
-
 export default {
   name: 'PaymentOutForm',
   components: {
@@ -117,13 +191,24 @@ export default {
   data: () => {
     return {
       branches: [],
-      suppliers: []
+      suppliers: [],
+      searchSupplier: '',
+      addCustomer: false,
+      customerSend: {
+        name: '',
+        phone: '',
+        email: ''
+      },
+      partialOrders: []
     }
   },
   mounted() {
     this.getSuppliers()
     this.getBranches()
-    if (this.$auth.user.type === 'Sub Admin') {
+    if (
+      this.$auth.user.type === 'Sub Admin' ||
+      this.$auth.user.type === 'Branch Manager'
+    ) {
       this.paymentOut.branch_id = this.$auth.user.branch_id
     }
     if (!this.isUpdate) {
@@ -132,8 +217,23 @@ export default {
   },
   methods: {
     required,
+    priceValidator(value) {
+      let s = null
+      if (parseInt(value) <= parseInt(this.paymentOut.order.balance_due)) {
+        s = true
+      } else {
+        s = 'Paid must be less than balance.'
+      }
+      return s
+    },
     async getSuppliers() {
-      this.suppliers = await this.$axios.$get('supplier')
+      if (this.$auth.user.type === 'Main Admin') {
+        this.suppliers = await this.$axios.$get('/supplier/branch/0')
+      } else {
+        this.suppliers = await this.$axios.$get(
+          '/supplier/branch/' + this.$auth.user.branch_id
+        )
+      }
     },
     async getBranches() {
       this.branches = await this.$axios.$get('branch')
@@ -142,9 +242,51 @@ export default {
       this.paymentOut.receipt_id = await this.$axios.$get(
         '/paymentOut/getReceipt'
       )
+      this.paymentOut.receipt_date = moment().format('YYYY-MM-DD')
     },
     formData() {
+      if (this.paymentOut.order) {
+        this.paymentOut.order_id = this.paymentOut.order.id
+      }
+      console.log(this.paymentOut)
       return this.paymentOut
+    },
+    openCustomerForm() {
+      this.customerSend.name = this.searchSupplier
+      this.addCustomer = !this.addCustomer
+    },
+    selectCustomer(i) {
+      console.log(i)
+      this.getSuppliers()
+      this.paymentOut.supplier_id = i
+      console.log(this.paymentOut.supplier_id)
+      this.getPartialOrders()
+    },
+    selectCustomerAfterSave(i) {
+      console.log(i)
+      console.log(i.data.id)
+      this.getSuppliers()
+      this.paymentOut.supplier_id = i.data.id
+      this.addCustomer = false
+    },
+    saveCustomer() {
+      return this.customerSend
+    },
+    async getPartialOrders() {
+      if (this.paymentOut.supplier_id && !this.paymentOut.branch_id) {
+        this.partialOrders = await this.$axios.$get(
+          '/purchaseOrder/supplier/partial/' +
+            this.paymentOut.supplier_id +
+            '/-1'
+        )
+      } else if (this.paymentOut.supplier_id && this.paymentOut.branch_id) {
+        this.partialOrders = await this.$axios.$get(
+          '/purchaseOrder/supplier/partial/' +
+            this.paymentOut.supplier_id +
+            '/' +
+            this.paymentOut.branch_id
+        )
+      }
     }
   }
 }

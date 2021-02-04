@@ -57,8 +57,8 @@
           ></v-text-field>
           <v-btn
             width="100%"
-            color="#FF974D"
-            style="color:#494237"
+            color="#4f6318"
+            style="color:#fff"
             large
             elevation="0"
             @click="changePassword"

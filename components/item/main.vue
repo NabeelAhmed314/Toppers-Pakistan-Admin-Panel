@@ -58,7 +58,10 @@ export default {
     }
   },
   mounted() {
-    if (this.$auth.user.type === 'Sub Admin') {
+    if (
+      this.$auth.user.type === 'Sub Admin' ||
+      this.$auth.user.type === 'Branch Manager'
+    ) {
       this.branchId = this.$auth.user.branch_id
     }
     this.getItems()

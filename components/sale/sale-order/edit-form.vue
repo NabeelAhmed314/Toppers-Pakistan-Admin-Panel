@@ -202,6 +202,19 @@
           <div
             style="display: grid; grid-template-columns: 1fr 1fr;margin-bottom: 5px"
           >
+            <label>Extra Charges</label>
+            <v-text-field
+              v-model="extraCharges"
+              outlined
+              dense
+              hide-details
+              placeholder="0.0"
+              @change="extraChargesApply"
+            ></v-text-field>
+          </div>
+          <div
+            style="display: grid; grid-template-columns: 1fr 1fr;margin-bottom: 5px"
+          >
             <label>Discount</label>
             <v-text-field
               v-model="discount"
@@ -210,7 +223,7 @@
               hide-details
               outlined
               placeholder="0.0"
-              @change="discountApply"
+              @change="extraChargesApply"
             ></v-text-field>
           </div>
           <div
@@ -285,6 +298,7 @@ export default {
       received: null,
       balance: null,
       discount: null,
+      extraCharges: null,
       columns: [
         { text: '#', value: 'count', width: '50px', sortable: false },
         { text: 'Product', value: 'product', width: '500px', sortable: false },
@@ -296,12 +310,10 @@ export default {
       ]
     }
   },
-  mounted() {
-    this.getBranches()
-    this.getCustomers()
-    this.getProducts(this.order.branch_id)
-  },
-  async beforeMount() {
+  async mounted() {
+    await this.getBranches()
+    await this.getCustomers()
+    await this.getProducts(this.order.branch_id)
     await this.setAmount()
   },
   methods: {
@@ -323,7 +335,8 @@ export default {
       this.total = this.order.amount
       this.discount = this.order.discount
       this.balance = this.order.balance_due
-      this.recieved = this.order.amount - this.order.balance_due
+      this.received = this.order.amount - this.order.balance_due
+      this.extraCharges = this.order.extra
       for (const item of this.selectedProducts) {
         item.amount = item.qty * item.price
         item.variants = await this.$axios.$get('variant/item/' + item.item_id)
@@ -335,7 +348,13 @@ export default {
       this.branches = await this.$axios.$get('branch')
     },
     async getCustomers() {
-      this.customers = await this.$axios.$get('customer')
+      if (this.$auth.user.type === 'Main Admin') {
+        this.customers = await this.$axios.$get('/customer/branch/0')
+      } else {
+        this.customers = await this.$axios.$get(
+          '/customer/branch/' + this.$auth.user.branch_id
+        )
+      }
     },
     async getProducts(i) {
       this.products = await this.$axios.$get('item/filter/' + i)
@@ -363,7 +382,7 @@ export default {
         this.selectedProducts[setIndex].price *
         this.selectedProducts[setIndex].qty
       this.getTotal()
-      this.discountApply()
+      this.extraChargesApply()
       this.checkBalance()
     },
     quantityChanged(item) {
@@ -385,7 +404,7 @@ export default {
       this.selectedProducts = Array.from(this.selectedProducts)
 
       this.getTotal()
-      this.discountApply()
+      this.extraChargesApply()
       this.checkBalance()
     },
     variantChanged(item) {
@@ -397,7 +416,7 @@ export default {
         this.selectedProducts[setIndex].price *
         this.selectedProducts[setIndex].qty
       this.getTotal()
-      this.discountApply()
+      this.extraChargesApply()
       this.checkBalance()
     },
     removeItem(item) {
@@ -405,7 +424,7 @@ export default {
       if (this.selectedProducts.length > 1)
         this.selectedProducts.splice(setIndex, 1)
       this.getTotal()
-      this.discountApply()
+      this.extraChargesApply()
       this.checkBalance()
     },
     getTotal() {
@@ -418,9 +437,19 @@ export default {
     checkBalance() {
       this.balance = this.total - this.received
     },
-    discountApply() {
+    extraChargesApply() {
       this.getTotal()
-      this.total = this.total - this.discount
+      if (this.extraCharges && this.discount) {
+        this.total =
+          parseInt(this.total) +
+          parseInt(this.extraCharges) -
+          parseInt(this.discount)
+      } else if (this.extraCharges && !this.discount) {
+        this.total = parseInt(this.total) + parseInt(this.extraCharges)
+      } else if (this.discount && !this.extraCharges) {
+        this.total = parseInt(this.total) - parseInt(this.discount)
+      }
+      this.checkBalance()
     },
     async formData() {
       if (this.$refs.form.validate()) {
@@ -430,6 +459,17 @@ export default {
         data.amount = this.total
         data.discount = this.discount
         if (this.type) data.balance = this.balance
+        if (this.$auth.user.type === 'Branch Manager') {
+          data.delivery_fee = this.$auth.user.branch.delivery
+        } else {
+          for (const branch of this.branches) {
+            console.log('we here')
+            if (branch.id === this.order.branch_id) {
+              console.log('delivery')
+              data.delivery_fee = branch.delivery
+            }
+          }
+        }
         data.items = []
         for (const item of this.selectedProducts) {
           data.items.push({ item })

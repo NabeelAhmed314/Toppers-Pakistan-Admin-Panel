@@ -1,7 +1,13 @@
 <template>
   <div class="entity-list-main">
     <v-data-table
-      :height="variant || $auth.user.type === 'Sub Admin' ? '78vh' : '68vh'"
+      :height="
+        variant ||
+        $auth.user.type === 'Sub Admin' ||
+        $auth.user.type === 'Branch Manager'
+          ? '78vh'
+          : '68vh'
+      "
       :headers="dataColumns"
       :items="data"
       :search="searchText"
@@ -31,7 +37,11 @@
           </div>
         </v-toolbar>
         <v-toolbar
-          v-if="!variant && $auth.user.type === 'Main Admin'"
+          v-if="
+            !variant &&
+              ($auth.user.type === 'Main Admin' ||
+                $auth.user.type === 'Branch Manager')
+          "
           flat
           color="white"
         >
@@ -90,7 +100,10 @@
       </template>
       <template v-if="!variant" v-slot:item.actions="{ item }">
         <v-icon
-          v-if="$auth.user.type === 'Main Admin'"
+          v-if="
+            $auth.user.type === 'Main Admin' ||
+              $auth.user.type === 'Branch Manager'
+          "
           small
           class="mr-2"
           color="green"
@@ -100,7 +113,10 @@
           mdi-pencil
         </v-icon>
         <v-icon
-          v-if="$auth.user.type === 'Main Admin'"
+          v-if="
+            $auth.user.type === 'Main Admin' ||
+              $auth.user.type === 'Branch Manager'
+          "
           color="red"
           small
           aria-hidden="true"

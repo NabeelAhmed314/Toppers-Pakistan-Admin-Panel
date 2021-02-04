@@ -7,7 +7,7 @@ import EditPurchaseOrder from '@/components/purchase/purchase-order/edit-form'
 export default {
   name: 'Id',
   components: { EditPurchaseOrder },
-  middleware: 'isAdmin',
+  middleware: 'isAdminOrManager',
   async asyncData({ $axios, route }) {
     const order = await $axios.$get('purchaseOrder/' + route.params.id)
     const orderItems = await $axios.$get(

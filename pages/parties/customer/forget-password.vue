@@ -20,7 +20,7 @@ export default {
     }
   },
   head: {
-    title: 'Toppers Pakistan'
+    title: 'Apna Pos'
   }
 }
 </script>

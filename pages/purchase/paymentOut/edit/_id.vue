@@ -11,7 +11,7 @@ import PaymentOutForm from '@/components/purchase/payment-out/form'
 export default {
   name: 'Id',
   components: { PaymentOutForm },
-  middleware: 'isAdmin',
+  middleware: 'isAdminOrManager',
   async asyncData({ $axios, route }) {
     return {
       paymentOut: await $axios.$get('paymentOut/' + route.params.id)

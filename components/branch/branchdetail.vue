@@ -47,6 +47,26 @@
           </div>
         </v-toolbar>
       </template>
+      <template v-slot:item.actions="{ item }">
+        <v-icon
+          small
+          class="mr-2"
+          color="green"
+          aria-hidden="true"
+          @click.stop.prevent="handleUpdateEvent(item)"
+        >
+          mdi-pencil
+        </v-icon>
+        <v-icon
+          small
+          class="mr-2"
+          color="green"
+          aria-hidden="true"
+          @click.stop.prevent="handlePasswordEvent(item)"
+        >
+          mdi-lock
+        </v-icon>
+      </template>
     </v-data-table>
   </div>
 </template>
@@ -98,6 +118,12 @@ export default {
   },
   methods: {
     required,
+    handleUpdateEvent(item) {
+      this.$router.push('/branch/update-staff/' + item.id)
+    },
+    handlePasswordEvent(item) {
+      this.$router.push('/branch/change-password/' + item.id)
+    },
     openDetail(item) {
       this.$emit('openAdjust', item)
       this.$emit('openSubCategory', item)
@@ -176,7 +202,7 @@ export default {
   height: calc(70% - 10px);
 }
 .entity-value {
-  color: #bc282b;
+  color: #116199;
 }
 .form {
   width: 100%;

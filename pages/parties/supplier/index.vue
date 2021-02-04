@@ -6,7 +6,7 @@
 import SupplierMain from '@/components/parties/supplier-main'
 export default {
   name: 'Index',
-  middleware: 'isAdmin',
+  middleware: 'isAdminOrManager',
   components: { SupplierMain }
 }
 </script>

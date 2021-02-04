@@ -6,7 +6,7 @@
 import SaleReport from '@/components/report/sale'
 export default {
   name: 'Sale',
-  middleware: 'isAdmin',
+  middleware: 'isAdminOrManager',
   components: { SaleReport }
 }
 </script>

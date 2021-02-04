@@ -1,6 +1,6 @@
 # toppers-pakistan
 
-> Toppers Pakistan Admin Panel
+> Apna Pos Admin Panel
 
 ## Build Setup
 

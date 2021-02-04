@@ -7,6 +7,7 @@
           create-route="/parties/customer/add"
           update-route="/parties/customer/edit/$id"
           delete-route="/customer/delete/$id"
+          address-route="/parties/customer/address/$id"
           :data-columns="customerHeader"
           @partyChange="updateCustomer"
           @update="getCustomers"
@@ -87,7 +88,13 @@ export default {
       this.getCustomerTransactions()
     },
     async getCustomers() {
-      this.customers = await this.$axios.$get('/customer')
+      if (this.$auth.user.type === 'Main Admin') {
+        this.customers = await this.$axios.$get('/customer/branch/0')
+      } else {
+        this.customers = await this.$axios.$get(
+          '/customer/branch/' + this.$auth.user.branch_id
+        )
+      }
       this.getCustomer()
     }
   }

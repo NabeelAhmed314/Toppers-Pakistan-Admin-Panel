@@ -7,7 +7,7 @@ import PurchaseOrder from '@/components/purchase/purchase-order/purchase-order'
 export default {
   name: 'Index',
   components: { PurchaseOrder },
-  middleware: 'isAdmin'
+  middleware: 'isAdminOrManager'
 }
 </script>
 

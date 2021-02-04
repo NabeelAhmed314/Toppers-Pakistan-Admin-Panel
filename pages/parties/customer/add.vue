@@ -7,7 +7,7 @@ import PartyForm from '@/components/parties/form'
 export default {
   name: 'Add',
   components: { PartyForm },
-  middleware: 'isAdmin'
+  middleware: 'isAdminOrManager'
 }
 </script>
 

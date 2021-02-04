@@ -190,6 +190,7 @@ export default defineComponent({
             this.valid = false
             return
         }
+        console.log(res)
         if (res) context.emit('response', res)
 
         if (props.return) {

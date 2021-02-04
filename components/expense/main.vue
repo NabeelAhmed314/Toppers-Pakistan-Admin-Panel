@@ -2,7 +2,11 @@
   <div style="padding: 20px">
     <DataViewer
       title="Expenses"
-      endpoint="/expense"
+      :endpoint="
+        $auth.user.type === 'Branch Manager' || $auth.user.type === 'Sub Admin'
+          ? '/expense/branch/' + $auth.user.branch_id
+          : 'expense'
+      "
       :columns="columns"
       create
       create-route="/expense/add"

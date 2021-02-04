@@ -102,23 +102,24 @@
           </v-toolbar>
         </template>
         <template v-slot:item.actions="{ item }">
-          <v-icon
+          <v-btn
             color="green"
             small
-            class="mr-2"
+            class="mr-2 action-btn"
             aria-hidden="true"
             @click.stop.prevent="handleUpdateEvent(item)"
           >
-            mdi-pencil
-          </v-icon>
-          <v-icon
+            Edit
+          </v-btn>
+          <v-btn
             aria-hidden="true"
+            class="mr-2 action-btn"
             color="red"
             small
             @click.stop.prevent="removeItem(item)"
           >
-            mdi-delete
-          </v-icon>
+            Delete
+          </v-btn>
         </template>
         <template v-slot:item.amount="{ item }">
           <p style="margin: 0">Rs. {{ item.amount }}</p>
@@ -140,35 +141,35 @@
         <v-card-title>Sale Order Detail</v-card-title>
         <div style="display: grid;grid-template-columns: 1fr 1fr">
           <p style="font-weight: 700">Customer Name:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">
+          <p style="color: #116199">
             {{ detail.customer ? detail.customer.name : 'No Customer' }}
           </p>
         </div>
         <div style="display: grid;grid-template-columns: 1fr 1fr">
           <p style="font-weight: 700">Invoice Id:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">{{ detail.invoice_id }}</p>
+          <p style="color: #116199">{{ detail.invoice_id }}</p>
         </div>
         <div style="display: grid;grid-template-columns: 1fr 1fr">
           <p style="font-weight: 700">Invoice Date:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">{{ detail.invoice_date }}</p>
+          <p style="color: #116199">{{ detail.invoice_date }}</p>
         </div>
         <div style="display: grid;grid-template-columns: 1fr 1fr">
           <p style="font-weight: 700">Payment Type:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">{{ detail.payment_type }}</p>
+          <p style="color: #116199">{{ detail.payment_type }}</p>
         </div>
         <div style="display: grid;grid-template-columns: 1fr 1fr">
           <p style="font-weight: 700">Total Bill:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">Rs. {{ detail.amount }}</p>
+          <p style="color: #116199">Rs. {{ detail.amount }}</p>
         </div>
         <div style="display: grid;grid-template-columns: 1fr 1fr">
           <p style="font-weight: 700">Total Paid:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">
+          <p style="color: #116199">
             Rs. {{ detail.amount - detail.balance_due }}
           </p>
         </div>
         <div style="display: grid;grid-template-columns: 1fr 1fr">
           <p style="font-weight: 700">Total Balance:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">
+          <p style="color: #116199">
             Rs. {{ detail.balance_due ? detail.balance_due : '0.0' }}
           </p>
         </div>
@@ -286,7 +287,10 @@ export default {
         id = 3
       }
       let response
-      if (this.$auth.user.type === 'Sub Admin') {
+      if (
+        this.$auth.user.type === 'Sub Admin' ||
+        this.$auth.user.type === 'branch Manager'
+      ) {
         response = await this.$axios.$get(
           '/purchaseOrder/summary/' + id + '/' + this.$auth.user.branch_id
         )
@@ -330,7 +334,10 @@ export default {
       } else if (this.type === 'This Year') {
         id = 3
       }
-      if (this.$auth.user.type === 'Sub Admin') {
+      if (
+        this.$auth.user.type === 'Sub Admin' ||
+        this.$auth.user.type === 'Branch Manager'
+      ) {
         this.data = await this.$axios.$get(
           'purchaseOrder/filter/' + id + '/' + this.$auth.user.branch_id
         )

@@ -8,7 +8,7 @@
       >
         <img
           alt="toppers-logo"
-          src="../../assets/images/ToppersPakistanLogo.png"
+          src="../../assets/images/ApnaPos.webp"
           width="130px"
         />
       </v-container>
@@ -54,21 +54,33 @@
           @click:append="togglePassword"
           @keypress.enter="userLogin"
         ></v-text-field>
-        <nuxt-link to="/auth/forgot-password" style="text-decoration: none">
-          <p style="font-size: 12px;text-align: right;color:#313f53;">
+        <nuxt-link
+          to="/auth/forgot-password"
+          style="text-decoration: none;cursor: pointer"
+        >
+          <p
+            style="font-size: 12px;text-align: right;color:#313f53;cursor: pointer"
+          >
             Forgot Password?
           </p></nuxt-link
         >
         <v-btn
           width="100%"
-          color="#FF974D"
-          style="color:#494237"
+          color="#4f6318"
+          style="color:#fff"
           large
           elevation="0"
           @click="userLogin"
         >
           Log In
         </v-btn>
+        <a
+          href="https://wa.me/923001300533"
+          target="_blank"
+          style="color: #116199;text-align: right;text-decoration: none;padding-top: 20px;display: block;cursor: pointer"
+          aria-hidden="true"
+          >Contact Admin
+        </a>
       </v-form>
     </v-card>
   </v-container>

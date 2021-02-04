@@ -46,7 +46,11 @@
           ></v-textarea>
           <v-autocomplete
             class="my-text"
-            :readonly="isUpdate"
+            :readonly="
+              isUpdate ||
+                $auth.user.type === 'Branch Manager' ||
+                $auth.user.type === 'Sub Admin'
+            "
             :value="expense.branch_id"
             :items="branches"
             :rules="[required]"
@@ -143,6 +147,13 @@ export default {
   }),
   mounted() {
     this.getBranches()
+    console.log(this.$auth.user)
+    if (
+      this.$auth.user.type === 'Branch Manager' ||
+      this.$auth.user.type === 'Sub Admin'
+    ) {
+      this.expense.branch_id = this.$auth.user.branch_id
+    }
   },
   methods: {
     priceWZ,

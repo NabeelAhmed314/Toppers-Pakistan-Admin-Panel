@@ -20,7 +20,7 @@
         <nuxt-link v-if="admin" to="/" style="text-decoration: none">
           <v-btn
             width="100%"
-            color="#FF974D"
+            color="#4f6318"
             style="color:#494237;text-decoration: none"
             large
             elevation="0"

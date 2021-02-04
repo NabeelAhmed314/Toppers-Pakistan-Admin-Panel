@@ -14,7 +14,7 @@
       <v-spacer />
       <v-btn
         v-if="data !== null && data.length !== 0"
-        color="#FF974D"
+        color="#4f6318"
         elevation="0"
         style="padding: 0 13px 0 7px !important; border-radius: 4px; margin-right: 10px"
         @click="generatePDF"

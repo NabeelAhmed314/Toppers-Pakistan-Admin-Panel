@@ -66,7 +66,7 @@
           ></v-autocomplete>
           <v-autocomplete
             class="my-text"
-            :readonly="isUpdate"
+            :readonly="isUpdate || $auth.user.type === 'Branch Manager'"
             :value="item.branch_id"
             :items="branches"
             item-text="name"
@@ -157,7 +157,7 @@
                 style="display: flex; align-items: center"
               >
                 <v-btn
-                  color="#FF974D"
+                  color="#4f6318"
                   style="color:#494237"
                   aria-hidden="true"
                   @click="addOption()"
@@ -390,6 +390,9 @@ export default {
         this.options = [{}]
         this.variants = []
       }
+    }
+    if (this.$auth.user.type === 'Branch Manager') {
+      this.item.branch_id = this.$auth.user.branch_id
     }
   },
   methods: {

@@ -64,7 +64,7 @@
             label="Admin Type"
           />
           <v-autocomplete
-            v-if="user.type === 'Sub Admin'"
+            v-if="user.type === 'Sub Admin' || user.type === 'Branch Manager'"
             readonly
             :rules="[required]"
             :items="branches"
@@ -85,8 +85,8 @@
           ></v-autocomplete>
           <v-btn
             width="100%"
-            color="#FF974D"
-            style="color:#494237"
+            color="#4f6318"
+            style="color:#fff"
             large
             elevation="0"
             @click="createUser"
@@ -112,7 +112,7 @@ export default {
   data: () => ({
     loading: false,
     success: false,
-    typeItems: ['Main Admin', 'Sub Admin'],
+    typeItems: ['Main Admin', 'Sub Admin', 'Branch Manager'],
     branches: [],
     errors: [],
     isLoading: false,
@@ -156,7 +156,10 @@ export default {
           formData.append('name', this.user.name)
           formData.append('email', this.user.email)
           formData.append('type', this.user.type)
-          if (this.user.type === 'Sub Admin') {
+          if (
+            this.user.type === 'Sub Admin' ||
+            this.user.type === 'Branch Manager'
+          ) {
             formData.append('branchId', this.user.branchId)
           }
           if (this.sendImage) {

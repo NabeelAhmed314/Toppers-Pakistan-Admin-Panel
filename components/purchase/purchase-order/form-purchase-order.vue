@@ -31,7 +31,7 @@
                 <span>
                   <p
                     style="margin: 0 5px 0 0;text-align: right;cursor: pointer"
-                    @click="saveSupplier"
+                    @click="openCustomerForm()"
                   >
                     <v-icon>mdi-plus-circle</v-icon>
                     Add Party
@@ -81,7 +81,10 @@
             item-text="name"
             item-value="id"
             label="Branch"
-            :readonly="$auth.user.type === 'Sub Admin'"
+            :readonly="
+              $auth.user.type === 'Sub Admin' ||
+                this.$auth.user.type === 'Branch Manager'
+            "
             placeholder="Search a Branch"
             @change="
               (item) => {
@@ -178,6 +181,17 @@
               @change="quantityChanged(item)"
             />
           </template>
+          <template v-slot:item.price="{ item }">
+            <v-text-field
+              v-model="item.price"
+              dense
+              outlined
+              hide-details
+              type="number"
+              :rules="[required, quantity]"
+              @change="quantityChanged(item)"
+            />
+          </template>
         </v-data-table>
       </div>
       <div class="sale-order-total">
@@ -240,14 +254,55 @@
         >
       </v-toolbar>
     </v-form>
+    <v-dialog v-model="addCustomer" width="50%">
+      <SimpleForm
+        title="Add Customer"
+        method="post"
+        :data="saveCustomer"
+        endpoint="supplier/store"
+        @response="selectCustomerAfterSave"
+      >
+        <div class="span-2">
+          <v-card style="padding: 20px;margin-bottom: 30px;box-shadow: none">
+            <v-text-field
+              v-model="customerSend.name"
+              :rules="[required]"
+              style="align-items: center !important;"
+              outlined
+              label="Supplier Name"
+              dense
+            ></v-text-field>
+            <v-text-field
+              v-model="customerSend.email"
+              style="align-items: center !important;"
+              outlined
+              label="Supplier Email"
+              dense
+            ></v-text-field>
+            <v-text-field
+              v-model="customerSend.phone"
+              style="align-items: center !important;"
+              outlined
+              type="number"
+              label="Supplier Phone"
+              dense
+            ></v-text-field>
+          </v-card>
+        </div>
+      </SimpleForm>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import moment from 'moment'
+import SimpleForm from '../../../common/ui/widgets/SimpleForm'
 import { required, quantity } from '@/common/lib/validator'
 export default {
   name: 'FormPurchaseOrder',
+  components: {
+    SimpleForm
+  },
   data: () => {
     return {
       selectedProducts: [
@@ -281,14 +336,23 @@ export default {
         { text: 'Product', value: 'product', width: '500px', sortable: false },
         { text: 'Qty', value: 'qty', width: '100px', sortable: false },
         { text: 'Unit', value: 'unit', sortable: false },
-        { text: 'Price/Unit', value: 'price', sortable: false },
+        { text: 'Price/Unit', value: 'price', sortable: false, width: '100px' },
         { text: 'Amount', value: 'amount', sortable: false },
         { text: '', value: 'actions', sortable: false, width: '50px' }
-      ]
+      ],
+      addCustomer: false,
+      customerSend: {
+        name: '',
+        phone: '',
+        email: ''
+      }
     }
   },
   mounted() {
-    if (this.$auth.user.type === 'Sub Admin') {
+    if (
+      this.$auth.user.type === 'Sub Admin' ||
+      this.$auth.user.type === 'Branch Manager'
+    ) {
       this.branch = this.$auth.user.branch_id
       this.getProducts(this.branch)
     }
@@ -310,11 +374,21 @@ export default {
         variants: []
       })
     },
+    openCustomerForm() {
+      this.customerSend.name = this.searchSupplier
+      this.addCustomer = !this.addCustomer
+    },
     async getBranches() {
       this.branches = await this.$axios.$get('branch')
     },
     async getSuppliers() {
-      this.suppliers = await this.$axios.$get('supplier')
+      if (this.$auth.user.type === 'Main Admin') {
+        this.suppliers = await this.$axios.$get('/supplier/branch/0')
+      } else {
+        this.suppliers = await this.$axios.$get(
+          '/supplier/branch/' + this.$auth.user.branch_id
+        )
+      }
     },
     async getInvoiceNumber() {
       this.invoiceNumber = await this.$axios.$get('purchaseOrder/getInvoice')
@@ -322,21 +396,21 @@ export default {
     },
     async getProducts(i) {
       this.products = await this.$axios.$get('item/filter/' + i)
+      console.log(this.products)
     },
     selectCustomer(i) {
+      console.log(i)
+      this.getSuppliers()
       this.supplier = i
-      this.billingName = i.name
     },
-    async saveSupplier() {
-      if (this.searchSupplier) {
-        console.log(this.searchSupplier)
-        const obj = {
-          name: this.searchSupplier
-        }
-        const response = await this.$axios.$post('supplier/store', obj)
-        await this.getSuppliers()
-        this.selectCustomer(response)
-      }
+    selectCustomerAfterSave(i) {
+      console.log(i.data)
+      this.getSuppliers()
+      this.supplier = i.data
+      this.addCustomer = false
+    },
+    saveCustomer() {
+      return this.customerSend
     },
     async productChanged(i, index) {
       const setIndex = this.selectedProducts.indexOf(index)
@@ -350,10 +424,10 @@ export default {
         ].variants[0]
         this.selectedProducts[setIndex].price = this.selectedProducts[
           setIndex
-        ].variant.sale_price
+        ].variant.purchase_price
       } else {
         this.selectedProducts[setIndex].variant = null
-        this.selectedProducts[setIndex].price = i.sale_price
+        this.selectedProducts[setIndex].price = i.purchase_price
       }
       this.selectedProducts[setIndex].product = i
       this.selectedProducts[setIndex].unit = i.unit.name
@@ -375,7 +449,7 @@ export default {
       const setIndex = this.selectedProducts.indexOf(item)
       this.selectedProducts[setIndex].price = this.selectedProducts[
         setIndex
-      ].variant.sale_price
+      ].variant.purchase_price
       this.selectedProducts[setIndex].amount =
         this.selectedProducts[setIndex].price *
         this.selectedProducts[setIndex].qty
@@ -458,5 +532,8 @@ input[type='number'] {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 10px;
+}
+.form {
+  width: 100%;
 }
 </style>

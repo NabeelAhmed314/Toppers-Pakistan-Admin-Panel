@@ -6,7 +6,7 @@
 import SaleReturnForm from '@/components/sale/sale-return/form'
 export default {
   name: 'Add',
-  middleware: 'isAdmin',
+  middleware: 'isAdminOrManager',
   components: { SaleReturnForm }
 }
 </script>

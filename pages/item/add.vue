@@ -7,7 +7,7 @@ import ItemForm from '@/components/item/form'
 export default {
   name: 'Add',
   components: { ItemForm },
-  middleware: 'isAdmin'
+  middleware: 'isAdminOrManager'
 }
 </script>
 

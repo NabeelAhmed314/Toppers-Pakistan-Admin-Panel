@@ -206,6 +206,14 @@
           </span>
         </div>
       </template>
+      <template v-slot:item.address="{ item }">
+        <slot name="address" :item="item" />
+        {{ item.description ? item.description + ',' : '' }}
+        {{ item.house ? item.house + ',' : '' }}
+        {{ item.street ? item.street + ',' : '' }}
+        {{ item.area ? item.area + ',' : '' }}
+        {{ item.city ? item.city + '' : '' }}
+      </template>
       <template v-slot:item.action="{ item }">
         <slot name="actions" :item="item" />
         <v-icon

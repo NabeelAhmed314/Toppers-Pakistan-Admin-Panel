@@ -31,22 +31,22 @@
             </v-autocomplete>
             <div v-if="showDetail">
               <p>
-                Invoice Id: <span style="color: #bc282b">{{ invoiceId }}</span>
+                Invoice Id: <span style="color: #116199">{{ invoiceId }}</span>
               </p>
               <p>
                 Invoice Date:
-                <span style="color: #bc282b">{{ invoiceDate }}</span>
+                <span style="color: #116199">{{ invoiceDate }}</span>
               </p>
               <p>
                 Branch Name:
-                <span style="color: #bc282b">{{ branch.name }}</span>
+                <span style="color: #116199">{{ branch.name }}</span>
               </p>
               <p>
-                Total: <span style="color: #bc282b">{{ 'Rs. ' + amount }}</span>
+                Total: <span style="color: #116199">{{ 'Rs. ' + amount }}</span>
               </p>
               <p>
                 Balance:
-                <span style="color: #bc282b">{{
+                <span style="color: #116199">{{
                   balance ? 'Rs. ' + balance : 'Rs. 0.0'
                 }}</span>
               </p>
@@ -120,6 +120,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 import { required } from '@/common/lib/validator'
 import SimpleForm from '@/common/ui/widgets/SimpleForm'
 import { Return } from '@/models/return'
@@ -181,10 +182,14 @@ export default {
       this.saleReturn.invoice_id = await this.$axios.$get(
         '/saleReturn/getInvoice'
       )
+      this.saleReturn.invoice_date = moment().format('YYYY-MM-DD')
     },
     async getSaleOrders() {
       this.showDetail = false
-      if (this.$auth.user.type === 'Sub Admin') {
+      if (
+        this.$auth.user.type === 'Sub Admin' ||
+        this.$auth.user.type === 'Branch Manager'
+      ) {
         this.orders = await this.$axios.$get(
           'saleOrder/branch/' + this.$auth.user.branch_id
         )

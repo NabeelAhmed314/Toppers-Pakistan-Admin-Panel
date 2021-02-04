@@ -102,88 +102,140 @@
           </v-toolbar>
         </template>
         <template v-slot:item.actions="{ item }">
-          <v-tooltip left>
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon
-                color="grey"
-                small
-                class="mr-2"
-                aria-hidden="true"
-                v-bind="attrs"
-                v-on="on"
-                @click.stop.prevent="getPDF(item)"
-              >
-                mdi-printer
-              </v-icon>
-            </template>
-            <span>Print Invoice</span>
-          </v-tooltip>
-          <v-tooltip left>
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon
-                color="green"
-                small
-                class="mr-2"
-                aria-hidden="true"
-                v-bind="attrs"
-                v-on="on"
-                @click.stop.prevent="handleUpdateEvent(item)"
-              >
-                mdi-pencil
-              </v-icon>
-            </template>
-            <span>Edit</span>
-          </v-tooltip>
-          <v-tooltip left>
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon
-                v-if="item.balance_due > 0"
-                aria-hidden="true"
-                class="mr-2"
-                color="green"
-                v-bind="attrs"
-                small
-                v-on="on"
-                @click.stop.prevent="markAsPaid(item)"
-              >
-                mdi-check
-              </v-icon>
-            </template>
-            <span>Mark As Paid</span>
-          </v-tooltip>
-          <v-tooltip left>
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon
-                v-if="item.delivery > 0 && item.delivery_status === 'Pending'"
-                aria-hidden="true"
-                class="mr-2"
-                color="green"
-                v-bind="attrs"
-                small
-                v-on="on"
-                @click.stop.prevent="markAsComplete(item)"
-              >
-                mdi-check-circle
-              </v-icon>
-            </template>
-            <span>Mark As Complete</span>
-          </v-tooltip>
-          <v-tooltip left>
-            <template v-slot:activator="{ on, attrs }">
-              <v-icon
-                aria-hidden="true"
-                color="red"
-                class="mr-2"
-                small
-                v-bind="attrs"
-                v-on="on"
-                @click.stop.prevent="removeItem(item)"
-              >
-                mdi-delete
-              </v-icon>
-            </template>
-            <span>Delete</span>
-          </v-tooltip>
+          <!--          <v-tooltip left>-->
+          <!--            <template v-slot:activator="{ on, attrs }">-->
+          <!--              <v-icon-->
+          <!--                color="grey"-->
+          <!--                small-->
+          <!--                class="mr-2"-->
+          <!--                aria-hidden="true"-->
+          <!--                v-bind="attrs"-->
+          <!--                v-on="on"-->
+          <!--                @click.stop.prevent="getPDF(item)"-->
+          <!--              >-->
+          <!--                mdi-printer-->
+          <!--              </v-icon>-->
+          <!--            </template>-->
+          <!--            <span>Print Invoice</span>-->
+          <!--          </v-tooltip>-->
+          <v-btn
+            small
+            aria-hidden="true"
+            color="grey"
+            class="mr-2 action-btn"
+            v-bind="attrs"
+            v-on="on"
+            @click.stop.prevent="getPDF(item)"
+            >Print</v-btn
+          >
+          <!--          <v-tooltip left>-->
+          <!--            <template v-slot:activator="{ on, attrs }">-->
+          <!--              <v-icon-->
+          <!--                color="green"-->
+          <!--                small-->
+          <!--                class="mr-2"-->
+          <!--                aria-hidden="true"-->
+          <!--                v-bind="attrs"-->
+          <!--                v-on="on"-->
+          <!--                @click.stop.prevent="handleUpdateEvent(item)"-->
+          <!--              >-->
+          <!--                mdi-pencil-->
+          <!--              </v-icon>-->
+          <!--            </template>-->
+          <!--            <span>Edit</span>-->
+          <!--          </v-tooltip>-->
+          <v-btn
+            color="green"
+            small
+            class="mr-2 action-btn"
+            aria-hidden="true"
+            v-bind="attrs"
+            v-on="on"
+            @click.stop.prevent="handleUpdateEvent(item)"
+            >Edit</v-btn
+          >
+          <!--          <v-tooltip left>-->
+          <!--            <template v-slot:activator="{ on, attrs }">-->
+          <!--              <v-icon-->
+          <!--                v-if="item.balance_due > 0 && !item.return_status"-->
+          <!--                aria-hidden="true"-->
+          <!--                class="mr-2"-->
+          <!--                color="green"-->
+          <!--                v-bind="attrs"-->
+          <!--                small-->
+          <!--                v-on="on"-->
+          <!--                @click.stop.prevent="markAsPaid(item)"-->
+          <!--              >-->
+          <!--                mdi-check-->
+          <!--              </v-icon>-->
+          <!--            </template>-->
+          <!--            <span>Mark As Paid</span>-->
+          <!--          </v-tooltip>-->
+          <v-btn
+            v-if="item.balance_due > 0 && !item.return_status"
+            aria-hidden="true"
+            class="mr-2 action-btn"
+            color="green"
+            v-bind="attrs"
+            small
+            v-on="on"
+            @click.stop.prevent="markAsPaid(item)"
+            >Set Paid</v-btn
+          >
+          <!--          <v-tooltip left>-->
+          <!--            <template v-slot:activator="{ on, attrs }">-->
+          <!--              <v-icon-->
+          <!--                v-if="item.delivery > 0 && item.delivery_status === 'Pending'"-->
+          <!--                aria-hidden="true"-->
+          <!--                class="mr-2"-->
+          <!--                color="green"-->
+          <!--                v-bind="attrs"-->
+          <!--                small-->
+          <!--                v-on="on"-->
+          <!--                @click.stop.prevent="markAsComplete(item)"-->
+          <!--              >-->
+          <!--                mdi-check-circle-->
+          <!--              </v-icon>-->
+          <!--            </template>-->
+          <!--            <span>Mark As Complete</span>-->
+          <!--          </v-tooltip>-->
+          <v-btn
+            v-if="item.delivery > 0 && item.delivery_status === 'Pending'"
+            aria-hidden="true"
+            class="mr-2 action-btn"
+            color="green"
+            v-bind="attrs"
+            small
+            v-on="on"
+            @click.stop.prevent="markAsComplete(item)"
+            >Set Complete</v-btn
+          >
+          <!--          <v-tooltip left>-->
+          <!--            <template v-slot:activator="{ on, attrs }">-->
+          <!--              <v-icon-->
+          <!--                aria-hidden="true"-->
+          <!--                color="red"-->
+          <!--                class="mr-2"-->
+          <!--                small-->
+          <!--                v-bind="attrs"-->
+          <!--                v-on="on"-->
+          <!--                @click.stop.prevent="removeItem(item)"-->
+          <!--              >-->
+          <!--                mdi-delete-->
+          <!--              </v-icon>-->
+          <!--            </template>-->
+          <!--            <span>Delete</span>-->
+          <!--          </v-tooltip>-->
+          <v-btn
+            small
+            aria-hidden="true"
+            color="red"
+            class="mr-2 action-btn"
+            v-bind="attrs"
+            v-on="on"
+            @click.stop.prevent="removeItem(item)"
+            >Delete</v-btn
+          >
         </template>
         <template v-slot:item.amount="{ item }">
           <p style="margin: 0">Rs. {{ item.amount }}</p>
@@ -207,6 +259,10 @@
           <slot name="invoice_date" :item="item" />
           {{ date(item.invoice_date) }}
         </template>
+        <template v-slot:item.return_status="{ item }">
+          <slot name="return_status" :item="item" />
+          {{ item.return_status ? 'Returned' : '' }}
+        </template>
       </v-data-table>
     </div>
     <v-dialog v-model="showDetail" width="70%">
@@ -214,35 +270,35 @@
         <v-card-title>Sale Order Detail</v-card-title>
         <div style="display: grid;grid-template-columns: 1fr 1fr">
           <p style="font-weight: 700">Customer Name:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">
+          <p style="color: #116199">
             {{ detail.customer ? detail.customer.name : 'No Customer' }}
           </p>
         </div>
         <div style="display: grid;grid-template-columns: 1fr 1fr">
           <p style="font-weight: 700">Invoice Id:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">{{ detail.invoice_id }}</p>
+          <p style="color: #116199">{{ detail.invoice_id }}</p>
         </div>
         <div style="display: grid;grid-template-columns: 1fr 1fr">
           <p style="font-weight: 700">Invoice Date:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">{{ detail.invoice_date }}</p>
+          <p style="color: #116199">{{ detail.invoice_date }}</p>
         </div>
         <div style="display: grid;grid-template-columns: 1fr 1fr">
           <p style="font-weight: 700">Payment Type:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">{{ detail.payment_type }}</p>
+          <p style="color: #116199">{{ detail.payment_type }}</p>
         </div>
         <div style="display: grid;grid-template-columns: 1fr 1fr">
           <p style="font-weight: 700">Total Bill:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">Rs. {{ detail.amount }}</p>
+          <p style="color: #116199">Rs. {{ detail.amount }}</p>
         </div>
         <div style="display: grid;grid-template-columns: 1fr 1fr">
           <p style="font-weight: 700">Total Paid:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">
+          <p style="color: #116199">
             Rs. {{ detail.amount - detail.balance_due }}
           </p>
         </div>
         <div style="display: grid;grid-template-columns: 1fr 1fr">
           <p style="font-weight: 700">Total Balance:&nbsp;&nbsp;</p>
-          <p style="color: #bc282b">
+          <p style="color: #116199">
             Rs. {{ detail.balance_due ? detail.balance_due : '0.0' }}
           </p>
         </div>
@@ -314,6 +370,7 @@ export default {
         { text: 'Discount', value: 'discount' },
         { text: 'Balance Due', value: 'balance_due' },
         { text: 'Status', value: 'status' },
+        { text: 'Return Status', value: 'return_status' },
         { text: 'Delivery Status', value: 'delivery_status' },
         { text: '', value: 'actions', sortable: false }
       ],
@@ -438,7 +495,10 @@ export default {
       } else if (this.type === 'This Year') {
         id = 3
       }
-      if (this.$auth.user.type === 'Sub Admin') {
+      if (
+        this.$auth.user.type === 'Sub Admin' ||
+        this.$auth.user.type === 'Branch Manager'
+      ) {
         this.data = await this.$axios.$get(
           'saleOrder/filter/' + id + '/' + this.$auth.user.branch_id
         )

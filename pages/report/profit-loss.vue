@@ -6,7 +6,7 @@
 import ProfitLossMain from '@/components/report/profit-loss'
 export default {
   name: 'ProfitLoss',
-  middleware: 'isAdmin',
+  middleware: 'isAdminOrManager',
   components: { ProfitLossMain }
 }
 </script>

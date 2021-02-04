@@ -5,7 +5,10 @@
         <p style="margin: 0">{{ item.name }}</p>
         <v-spacer />
         <v-btn
-          v-if="$auth.user.type === 'Main Admin'"
+          v-if="
+            $auth.user.type === 'Main Admin' ||
+              $auth.user.type === 'Branch Manager'
+          "
           color="primary"
           small
           aria-hidden="true"
@@ -28,9 +31,29 @@
         <p class="entity-value">{{ item.stock }}</p>
       </div>
       <div style="display: flex">
-        <p>PURCHASE PRICE:&nbsp;</p>
-        <p class="entity-value">Rs. {{ item.purchase_price }}</p>
-        <v-spacer />
+        <p
+          v-if="
+            $auth.user.type === 'Main Admin' ||
+              $auth.user.type === 'Branch Manager'
+          "
+        >
+          PURCHASE PRICE:&nbsp;
+        </p>
+        <p
+          v-if="
+            $auth.user.type === 'Main Admin' ||
+              $auth.user.type === 'Branch Manager'
+          "
+          class="entity-value"
+        >
+          Rs. {{ item.purchase_price }}
+        </p>
+        <v-spacer
+          v-if="
+            $auth.user.type === 'Main Admin' ||
+              $auth.user.type === 'Branch Manager'
+          "
+        />
         <p>STOCK VALUE:&nbsp;</p>
         <p class="entity-value">Rs. {{ item.stock_value }}</p>
       </div>
@@ -75,7 +98,11 @@
       </template>
       <template v-slot:item.actions="{ item }">
         <v-icon
-          v-if="item.type < 3 && $auth.user.type === 'Main Admin'"
+          v-if="
+            item.type < 3 &&
+              ($auth.user.type === 'Main Admin' ||
+                $auth.user.type === 'Branch Manager')
+          "
           color="green"
           small
           class="mr-2"
@@ -91,7 +118,15 @@
         </p>
       </template>
       <template v-slot:item.price="{ item }">
-        <p style="margin: 0">Rs. {{ item.price }}</p>
+        <p
+          v-if="
+            $auth.user.type === 'Main Admin' ||
+              $auth.user.type === 'Branch Manager'
+          "
+          style="margin: 0"
+        >
+          Rs. {{ item.price }}
+        </p>
       </template>
     </v-data-table>
     <v-dialog
@@ -329,7 +364,7 @@ export default {
   height: calc(70% - 10px);
 }
 .entity-value {
-  color: #bc282b;
+  color: #116199;
 }
 .form {
   width: 100%;

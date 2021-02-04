@@ -145,7 +145,7 @@
                 style="display: flex; align-items: center"
               >
                 <v-btn
-                  color="#FF974D"
+                  color="#4f6318"
                   style="color:#494237"
                   @click="addOption()"
                   >Add Option

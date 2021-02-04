@@ -1,5 +1,18 @@
+/*::-webkit-scrollbar {*/
+/*  display: none;*/
+/*}*/
 ::-webkit-scrollbar {
-  display: none;
+  background-color: transparent;
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #babac0;
+  border-radius: 16px;
 }
 tr:nth-child(even) {
   background-color: rgba(211,211,211,0.3);
@@ -41,3 +54,11 @@ tr:nth-child(odd) {
   font-display: swap;
 }
 
+.v-tabs-slider-wrapper {
+  height: 5px !important;
+}
+
+.action-btn {
+  color: white !important;
+  margin: 5px;
+}

@@ -1,7 +1,7 @@
 {
-  "name": "toppers-pakistan",
+  "name": "apna-pos",
   "version": "1.0.0",
-  "description": "Toppers Pakistan Admin Panel",
+  "description": "Apna Pos Admin Panel",
   "author": "Nabeel Ahmed",
   "private": true,
   "scripts": {
@@ -15,6 +15,7 @@
     "@nuxtjs/auth": "^4.9.1",
     "@nuxtjs/axios": "^5.12.2",
     "@vue/composition-api": "^1.0.0-beta.11",
+    "firebase-functions": "^3.13.0",
     "moment": "^2.29.1",
     "nuxt": "^2.0.0",
     "v-mask": "^2.2.3",

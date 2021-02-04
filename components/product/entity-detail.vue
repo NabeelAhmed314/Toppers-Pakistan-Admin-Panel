@@ -323,7 +323,7 @@ export default {
   height: calc(70% - 10px);
 }
 .entity-value {
-  color: #bc282b;
+  color: #116199;
 }
 .form {
   width: 100%;

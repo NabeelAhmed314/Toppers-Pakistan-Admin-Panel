@@ -10,7 +10,7 @@
 import SaleReturnForm from '@/components/sale/sale-return/form'
 export default {
   name: 'Id',
-  middleware: 'isAdmin',
+  middleware: 'isAdminOrManager',
   components: { SaleReturnForm },
   async asyncData({ $axios, route }) {
     console.log(await $axios.$get('saleReturn/' + route.params.id))

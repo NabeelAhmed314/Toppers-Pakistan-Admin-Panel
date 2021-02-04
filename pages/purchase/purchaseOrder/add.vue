@@ -7,7 +7,7 @@ import FormPurchaseOrder from '@/components/purchase/purchase-order/form-purchas
 export default {
   name: 'Add',
   components: { FormPurchaseOrder },
-  middleware: 'isAdmin'
+  middleware: 'isAdminOrManager'
 }
 </script>
 

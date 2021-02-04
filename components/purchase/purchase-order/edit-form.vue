@@ -181,6 +181,17 @@
               @change="quantityChanged(item)"
             />
           </template>
+          <template v-slot:item.price="{ item }">
+            <v-text-field
+              v-model="item.price"
+              dense
+              outlined
+              hide-details
+              type="number"
+              :rules="[required, quantity]"
+              @change="quantityChanged(item)"
+            />
+          </template>
         </v-data-table>
       </div>
       <div class="sale-order-total">
@@ -275,7 +286,7 @@ export default {
         { text: 'Product', value: 'product', width: '500px', sortable: false },
         { text: 'Qty', value: 'qty', width: '100px', sortable: false },
         { text: 'Unit', value: 'product.unit.name', sortable: false },
-        { text: 'Price/Unit', value: 'price', sortable: false },
+        { text: 'Price/Unit', value: 'price', sortable: false, width: '100px' },
         { text: 'Amount', value: 'amount', sortable: false },
         { text: '', value: 'actions', sortable: false, width: '50px' }
       ]
@@ -319,7 +330,13 @@ export default {
       this.branches = await this.$axios.$get('branch')
     },
     async getCustomers() {
-      this.suppliers = await this.$axios.$get('supplier')
+      if (this.$auth.user.type === 'Main Admin') {
+        this.suppliers = await this.$axios.$get('/supplier/branch/0')
+      } else {
+        this.suppliers = await this.$axios.$get(
+          '/supplier/branch/' + this.$auth.user.branch_id
+        )
+      }
     },
     async getProducts(i) {
       this.products = await this.$axios.$get('item/filter/' + i)

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-tabs v-model="tab" background-color="#313F53" color="#ff974d" dark>
+    <v-tabs v-model="tab" background-color="#116199" color="#B5D75A" dark>
       <v-tab>Categories</v-tab>
       <v-tab>Sub Categories</v-tab>
       <v-tab>Units</v-tab>

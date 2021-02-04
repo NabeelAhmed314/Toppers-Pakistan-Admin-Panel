@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[44],{813:function(e,t,n){"use strict";n.r(t);var r={name:"Add",middleware:"isAdmin",components:{CategoryForm:n(674).a}},o=n(51),component=Object(o.a)(r,(function(){var e=this.$createElement;return(this._self._c||e)("category-form",{attrs:{title:"Add Category"}})}),[],!1,null,"5934f20c",null);t.default=component.exports}}]);

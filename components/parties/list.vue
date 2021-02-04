@@ -66,6 +66,15 @@
         >
           mdi-delete
         </v-icon>
+        <v-icon
+          v-if="addressRoute"
+          color="green"
+          aria-hidden="true"
+          small
+          @click.stop.prevent="handleAddressEvent(item)"
+        >
+          mdi-book
+        </v-icon>
       </template>
     </v-data-table>
     <v-dialog v-model="showError" width="50%" style="padding: 20px">
@@ -99,6 +108,10 @@ export default {
     dataColumns: {
       type: Array,
       default: () => []
+    },
+    addressRoute: {
+      type: String,
+      default: null
     }
   },
   data: () => {
@@ -122,6 +135,9 @@ export default {
     },
     handleUpdateEvent(item) {
       this.$router.push(this.updateRoute.replace('$id', item.id))
+    },
+    handleAddressEvent(item) {
+      this.$router.push(this.addressRoute.replace('$id', item.id))
     },
     async removeItem(item) {
       if (confirm('Are you sure?')) {

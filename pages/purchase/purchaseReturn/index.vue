@@ -7,7 +7,7 @@ import PurchaseReturn from '@/components/purchase/purchase-return/purchase-retur
 export default {
   name: 'Index',
   components: { PurchaseReturn },
-  middleware: 'isAdmin'
+  middleware: 'isAdminOrManager'
 }
 </script>
 

@@ -65,23 +65,24 @@
           </v-toolbar>
         </template>
         <template v-slot:item.actions="{ item }">
-          <v-icon
+          <v-btn
             color="green"
             small
-            class="mr-2"
+            class="mr-2 action-btn"
             aria-hidden="true"
             @click="handleUpdateEvent(item)"
           >
-            mdi-pencil
-          </v-icon>
-          <v-icon
+            Edit
+          </v-btn>
+          <v-btn
             aria-hidden="true"
             color="red"
+            class="mr-2 action-btn"
             small
             @click.stop.prevent="removeItem(item)"
           >
-            mdi-delete
-          </v-icon>
+            Delete
+          </v-btn>
         </template>
         <template v-slot:item.action_type="{ item }">
           <p style="margin: 0">
@@ -116,7 +117,7 @@ export default {
       dataColumns: [
         { text: 'Date', value: 'invoice_date' },
         { text: 'Ref No.', value: 'invoice_id' },
-        { text: 'Name', value: 'customer.name' },
+        { text: 'Name', value: 'supplier.name' },
         { text: 'Branch', value: 'purchase_order.branch.name' },
         { text: 'Total', value: 'total' },
         { text: 'Paid', value: 'paid' },
@@ -140,7 +141,10 @@ export default {
         const data = {}
         data.to = this.to
         data.from = this.from
-        if (this.$auth.user.type === 'Sub Admin') {
+        if (
+          this.$auth.user.type === 'Sub Admin' ||
+          this.$auth.user.type === 'Branch Manager'
+        ) {
           this.data = await this.$axios.$post(
             '/purchaseReturn/filter/' + this.$auth.user.branch_id,
             data
@@ -151,7 +155,10 @@ export default {
       }
     },
     async getData() {
-      if (this.$auth.user.type === 'Sub Admin') {
+      if (
+        this.$auth.user.type === 'Sub Admin' ||
+        this.$auth.user.type === 'Branch Manager'
+      ) {
         this.data = await this.$axios.$get(
           '/purchaseReturn/branch/' + this.$auth.user.branch_id
         )

@@ -31,7 +31,7 @@
                 <span>
                   <p
                     style="margin: 0 5px 0 0;text-align: right;cursor: pointer"
-                    @click="saveCustomer"
+                    @click="openCustomerForm()"
                   >
                     <v-icon>mdi-plus-circle</v-icon>
                     Add Party
@@ -41,15 +41,44 @@
             </v-autocomplete>
           </div>
           <div class="sale-order-customer-address">
-            <v-textarea
-              v-model="billingAddress"
+            <v-select
+              v-model="address"
               style="margin: 0 3px;width: calc(60% - 3px)"
-              label="Billing Address"
-              hide-details
-              rows="3"
-              dense
               outlined
-            />
+              dense
+              flat
+              :value-comparator="(a, b) => a && b && a.id === b.id"
+              label="Address (Optional)"
+              :items="addresses"
+              :item-value="(item) => item"
+              @change="(item) => selectAddress(item)"
+            >
+              <template v-slot:no-data>
+                <span>
+                  <p style="margin: 0">
+                    {{
+                      customer ? 'No Address Found' : 'Select Customer First'
+                    }}
+                  </p>
+                </span>
+              </template>
+              <template v-slot:item="{ item }">
+                {{ item.description ? item.description + ',' : '' }}
+                {{ item.house ? item.house + ',' : '' }}
+                {{ item.street ? item.street + ',' : '' }}
+                {{ item.area ? item.area + ',' : '' }}
+                {{ item.city ? item.city + ',' : '' }}
+                {{ item.mobile ? item.mobile : '' }}
+              </template>
+              <template v-slot:selection="{ item }">
+                {{ item.description ? item.description + ',' : '' }}
+                {{ item.house ? item.house + ',' : '' }}
+                {{ item.street ? item.street + ',' : '' }}
+                {{ item.area ? item.area + ',' : '' }}
+                {{ item.city ? item.city + ',' : '' }}
+                {{ item.mobile ? item.mobile : '' }}
+              </template>
+            </v-select>
           </div>
         </div>
         <v-spacer />
@@ -81,7 +110,10 @@
             item-text="name"
             item-value="id"
             label="Branch"
-            :readonly="$auth.user.type === 'Sub Admin'"
+            :readonly="
+              $auth.user.type === 'Sub Admin' ||
+                $auth.user.type === 'Branch Manager'
+            "
             placeholder="Search a Branch"
             @change="
               (item) => {
@@ -199,6 +231,19 @@
           <div
             style="display: grid; grid-template-columns: 1fr 1fr;margin-bottom: 5px"
           >
+            <label>Extra Charges</label>
+            <v-text-field
+              v-model="extraCharges"
+              outlined
+              dense
+              hide-details
+              placeholder="0.0"
+              @change="extraChargesApply"
+            ></v-text-field>
+          </div>
+          <div
+            style="display: grid; grid-template-columns: 1fr 1fr;margin-bottom: 5px"
+          >
             <label>Discount</label>
             <v-text-field
               v-model="discount"
@@ -206,7 +251,7 @@
               dense
               hide-details
               placeholder="0.0"
-              @change="discountApply"
+              @change="extraChargesApply"
             ></v-text-field>
           </div>
           <div
@@ -253,14 +298,61 @@
         >
       </v-toolbar>
     </v-form>
+    <v-dialog v-model="addCustomer" width="50%">
+      <SimpleForm
+        title="Add Customer"
+        method="post"
+        :data="saveCustomer"
+        endpoint="customer/store"
+        @response="addAddress"
+      >
+        <div class="span-2">
+          <v-card style="padding: 20px;margin-bottom: 30px;box-shadow: none">
+            <v-text-field
+              v-model="customerSend.name"
+              :rules="[required]"
+              style="align-items: center !important;"
+              outlined
+              label="Customer Name"
+              dense
+            ></v-text-field>
+            <v-text-field
+              v-model="customerSend.email"
+              style="align-items: center !important;"
+              outlined
+              label="Customer Email"
+              dense
+            ></v-text-field>
+            <v-text-field
+              v-model="customerSend.phone"
+              style="align-items: center !important;"
+              outlined
+              label="Customer Phone"
+              dense
+            ></v-text-field>
+            <v-text-field
+              v-model="customerSend.address"
+              style="align-items: center !important;"
+              outlined
+              label="Customer Address"
+              dense
+            ></v-text-field>
+          </v-card>
+        </div>
+      </SimpleForm>
+    </v-dialog>
   </div>
 </template>
 
 <script>
 import moment from 'moment'
+import SimpleForm from '../../../common/ui/widgets/SimpleForm'
 import { required, quantity } from '@/common/lib/validator'
 export default {
   name: 'FormSaleOrder',
+  components: {
+    SimpleForm
+  },
   data: () => {
     return {
       selectedProducts: [
@@ -289,6 +381,7 @@ export default {
       total: null,
       received: null,
       discount: null,
+      extraCharges: null,
       balance: null,
       columns: [
         { text: '#', value: 'count', width: '50px', sortable: false },
@@ -298,11 +391,23 @@ export default {
         { text: 'Price/Unit', value: 'price', sortable: false },
         { text: 'Amount', value: 'amount', sortable: false },
         { text: '', value: 'actions', sortable: false, width: '50px' }
-      ]
+      ],
+      addCustomer: false,
+      customerSend: {
+        name: '',
+        phone: '',
+        email: '',
+        address: ''
+      },
+      address: null,
+      addresses: []
     }
   },
   mounted() {
-    if (this.$auth.user.type === 'Sub Admin') {
+    if (
+      this.$auth.user.type === 'Sub Admin' ||
+      this.$auth.user.type === 'Branch Manager'
+    ) {
       this.branch = this.$auth.user.branch_id
       this.getProducts(this.branch)
     }
@@ -328,7 +433,16 @@ export default {
       this.branches = await this.$axios.$get('branch')
     },
     async getCustomers() {
-      this.customers = await this.$axios.$get('customer')
+      if (this.$auth.user.type === 'Main Admin') {
+        this.customers = await this.$axios.$get('/customer/branch/0')
+      } else {
+        this.customers = await this.$axios.$get(
+          '/customer/branch/' + this.$auth.user.branch_id
+        )
+      }
+    },
+    async getAddresses() {
+      this.addresses = await this.$axios.$get('/address/' + this.customer.id)
     },
     async getInvoiceNumber() {
       this.invoiceNumber = await this.$axios.$get('saleOrder/getInvoice')
@@ -337,19 +451,36 @@ export default {
     async getProducts(i) {
       this.products = await this.$axios.$get('item/filter/' + i)
     },
+    openCustomerForm() {
+      this.customerSend.name = this.searchCustomer
+      this.addCustomer = !this.addCustomer
+    },
+    selectAddress(i) {
+      this.address = i
+    },
     selectCustomer(i) {
       this.customer = i
       this.billingName = i.name
+      this.getAddresses()
     },
-    async saveCustomer() {
-      if (this.searchCustomer) {
-        const obj = {
-          name: this.searchCustomer
-        }
-        const response = await this.$axios.$post('customer/store', obj)
-        await this.getCustomers()
-        this.selectCustomer(response)
+    saveCustomer() {
+      return this.customerSend
+    },
+    addAddress(data) {
+      const send = {}
+      if (this.customerSend.address) {
+        send.city = this.customerSend.address
       }
+      if (this.customerSend.phone) {
+        send.mobile = this.customerSend.phone
+      }
+      send.customer_id = data.data.id
+      if (this.customerSend.address) {
+        this.$axios.$post('address', send)
+      }
+      this.getCustomers()
+      this.selectCustomer(data.data)
+      this.addCustomer = !this.addCustomer
     },
     async productChanged(i, index) {
       const setIndex = this.selectedProducts.indexOf(index)
@@ -412,9 +543,19 @@ export default {
     checkBalance() {
       this.balance = this.total - this.received
     },
-    discountApply() {
+    extraChargesApply() {
       this.getTotal()
-      this.total = this.total - this.discount
+      if (this.extraCharges && this.discount) {
+        this.total =
+          parseInt(this.total) +
+          parseInt(this.extraCharges) -
+          parseInt(this.discount)
+      } else if (this.extraCharges && !this.discount) {
+        this.total = parseInt(this.total) + parseInt(this.extraCharges)
+      } else if (this.discount && !this.extraCharges) {
+        this.total = parseInt(this.total) - parseInt(this.discount)
+      }
+      this.checkBalance()
     },
     async formData() {
       if (this.$refs.form.validate()) {
@@ -427,7 +568,20 @@ export default {
         data.branchId = this.branch
         data.type = this.type ? 'Credit' : 'Cash'
         data.amount = this.total
+        if (this.address) {
+          data.address_id = this.address.id
+        }
+        if (this.$auth.user.type === 'Branch Manager') {
+          data.delivery_fee = this.$auth.user.branch.delivery
+        } else {
+          for (const branch of this.branches) {
+            if (branch.id === this.branch) {
+              data.delivery_fee = branch.delivery
+            }
+          }
+        }
         if (this.discount) data.discount = this.discount
+        if (this.extraCharges) data.extra = this.extraCharges
         if (this.type) data.balance = this.balance
         data.items = []
         for (const item of this.selectedProducts) {
@@ -476,5 +630,8 @@ input[type='number'] {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-column-gap: 10px;
+}
+.form {
+  width: 100%;
 }
 </style>
